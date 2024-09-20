@@ -1,0 +1,197 @@
+/* App CSS */
+body {
+  overflow-x: hidden;
+}
+
+footer {
+  background-color: #040404;
+  max-height: 350px;
+  width: 100%;
+}
+
+header {
+  background: #ffffff !important;
+  color: #1f2126 !important;
+  height: 80px;
+}
+
+button {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1em;
+  font-weight: 500;
+  padding: 0.6em 1.2em;
+  transition: border-color 0.25s;
+}
+
+/* Classes */
+.logo {
+  height: 6em;
+  max-height: 48px;
+  padding: 1.5em;
+  transition: filter 300ms;
+  will-change: filter;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+.noBorder .MuiOutlinedInput-notchedOutline {
+  border: none !important;
+}
+
+.my-swal-container {
+  z-index: 2000;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.subHeader {
+  background-color: #1f2126;
+  min-height: 65px;
+}
+
+.content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.row {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.iconsNetwork {
+  margin-left: 20px;
+  justify-content: start !important;
+}
+
+.column {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-evenly;
+}
+
+.circle_container {
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: row;
+  height: 45px;
+  justify-content: center;
+  margin-inline: 10px;
+  padding: 4px;
+  width: 45px;
+}
+
+.circle_container img {
+  height: 80%;
+  width: 80%;
+}
+
+.circle_container svg {
+  height: 80%;
+  width: 80%;
+}
+
+.row h4 {
+  color: #ffffff;
+  font-family: "Poppins";
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 600;
+  height: 20px;
+  line-height: 20px;
+}
+
+.row_content {
+  margin-inline: 10px;
+}
+
+.copy_right {
+  color: #777777;
+  font-family: "Poppins";
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  height: 20px;
+  line-height: 20px;
+}
+
+.network {
+  aspect-ratio: 1/1;
+  margin-left: 10px;
+  width: 18px;
+}
+
+.logoHeader {
+  height: 52px;
+  justify-self: center;
+  margin: 0 auto;
+}
+
+.buttonsHeader {
+  justify-content: end !important;
+  margin-right: 20px;
+}
+
+.animated-component {
+    opacity: 0;
+    transform: translateY(-20px);
+    height: 0px;
+    padding-top: 0px;
+    padding-bottom:0px;
+    margin-bottom: 0px;
+    margin-top: 20px;
+    transition: opacity 0.5s ease, transform 0.5s ease, height 0.5s ease, padding 0.5s ease;
+}
+
+.animated-component.show {
+    opacity: 1;
+    transform: translateY(0);
+    height: auto;
+    padding-top: 16px;
+    padding-bottom:16px;
+    margin-bottom: 20px;
+    transition: opacity 0.5s ease, transform 0.5s ease, height 0.5s ease, padding 0.5s ease;
+}
+
+/* Keyframes */
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* Media queries */
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}

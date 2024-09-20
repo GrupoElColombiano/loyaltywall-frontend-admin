@@ -1,0 +1,7 @@
+.hidden-pagination {
+    -webkit-visibility: hidden !important;
+    -moz-visibility: hidden !important;
+    -ms-visibility: hidden !important;
+    -o-visibility: hidden !important;
+    visibility: hidden !important;
+}
