@@ -27,13 +27,13 @@ interface Product {
 
 export default function NewProducts(
     {
-        setProducts,
+        // setProducts,
         planId,
         refresh, // Recibe refresh como prop
 
     }: 
     {
-        setProducts?: any,
+        // setProducts?: any,
         planId?: string,
         refresh?: boolean, // Define el tipo de refresh
 

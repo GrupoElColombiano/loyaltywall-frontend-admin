@@ -1,7 +1,7 @@
 interface IOption {
     label: string;
     value: string | number | undefined;
-    idProduct: number;
+    idProduct?: number;
 }
 
 interface IInputSelect {

@@ -65,7 +65,8 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
 
     // States
     const [categories, setCategories] = useState<ICategory[]>([]);
-    const [products, setProducts] = useState<IOption[]>([]);
+    // const [products, setProducts] = useState<IOption[]>([]);
+    const [products, setProducts] = useState<any[]>([]);
     // const [fields, setFields] = useState<Category[]>([]);
 
     const [selectedProduct, setSelectedProduct] = useState(editData?.product?.idProduct || 0);
@@ -384,9 +385,11 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
                                                                     labelId="select-name-label"
                                                                     placeholder={t("Placeholders.select")}
                                                                     variant="outlined"
-                                                                    onChange={(event) => handleCategoryChange(event, index)}                                                                    >
+                                                                    onChange={(event: any) => handleCategoryChange(event, index)}                                                                    >
                                                                     {handleNotRepeat(categories, index)?.map((category: any) => (
-                                                                        <MenuItem key={category.idCategory} value={category.idCategory}>{category.name}</MenuItem>
+                                                                        <MenuItem key={category.idCategory} value={category.idCategory}>
+                                                                            {category.name}
+                                                                        </MenuItem>
                                                                     ))}
                                                                 </Select>
                                                             </FormControl>
@@ -401,7 +404,7 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
                                                                 label={t("Plan.newPlan.modal.categories.amount")}
                                                                 type="number"
                                                                 variant="outlined"
-                                                                onChange={(event) => handleAmountChange(event, index)}
+                                                                onChange={(event: any) => handleAmountChange(event, index)}
                                                                 value={watch(`categories.${index}.limited`) ? 1 : undefined}
                                                                 disabled={watch(`categories.${index}.limited`)}
                                                             />
@@ -434,7 +437,7 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
                                                                 label={t("Plan.newPlan.modal.categories.duration")}
                                                                 type="number"
                                                                 variant="outlined"
-                                                                onChange={(event) => handleDurationChange(event, index)}
+                                                                onChange={(event: any) => handleDurationChange(event, index)}
                                                             />
                                                         </Grid>
                                                         <Grid item xs={1} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
