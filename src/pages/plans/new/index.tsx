@@ -289,7 +289,7 @@ export default function NewPlanPage() {
                     )}
                     
                     <NewProducts
-                        setProducts={setModalProduct}
+                        // setProducts={setModalProduct}
                         planId={planId!}
                         key={refresh} // Utiliza el estado refresh como key
                     />
