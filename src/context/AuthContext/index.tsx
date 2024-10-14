@@ -66,6 +66,8 @@ export function AuthProvider({ children }: IAuthProviderProps) {
         setExpiredToken(expiredToken);
     }, []);
 
+    const fetchUser = localStorage.getItem("user") || `{}`;
+    const userInfo = JSON.parse(fetchUser)
     // Effects
     useEffect(() => {
         if (userKeyCloak) {
@@ -75,7 +77,8 @@ export function AuthProvider({ children }: IAuthProviderProps) {
             localStorage.setItem("user", JSON.stringify(userKeyCloak));
             localStorage.setItem("access_token", userKeyCloak.access_token);
         }
-    }, [userKeyCloak]);
+
+    }, [userKeyCloak, userInfo]);
 
     useEffect(() => {
 

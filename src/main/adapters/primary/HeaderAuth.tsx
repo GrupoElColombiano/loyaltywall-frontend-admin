@@ -182,18 +182,19 @@ const HeaderAuth = () => {
     };
 
     const getUser = () => {
-        getUserById(user.profile?.sub)
-            .then((response) => { 
-                setUserDetail(response?.data);
+        getUserById(user?.profile?.sub, user?.access_token)
+            .then((response) => {
+                // setUserDetail(response?.data);
+                setUserDetail(response);
             })
-            .catch(() => {                
+            .catch((error) => {  
+                console.log("❌ Error ❌", error);              
                 counter += 1;
 
                 if (counter < 3) {
                     return getUser();
                 } else {
                     changeExpiredToken(true);
-
                     navigate("/404");
                 }
             })
@@ -207,7 +208,7 @@ const HeaderAuth = () => {
         setIsLoaded(true);          
 
         getUser();
-    }, []); 
+    }, [user?.profile?.sub]); 
 
     useEffect(() => {
         if(!rolStorage && !siteStorage && user?.profile?.sub != null && accessToken != null){
@@ -366,6 +367,9 @@ const HeaderAuth = () => {
                             <MenuItem onClick={() => {
                                 auth.signoutRedirect();
                                 auth.removeUser();
+                                localStorage.removeItem("user");
+                                localStorage.removeItem("rolUser");
+                                localStorage.removeItem("siteUser");
                             }}>
                                 <ExitToAppIcon color="error" sx={{ marginRight: "10px" }} />
                                 {t("HeatherAuth.logout")}

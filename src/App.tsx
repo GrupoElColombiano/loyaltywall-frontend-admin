@@ -60,13 +60,6 @@ export default function App() {
  
     // Effects
     useEffect(() => {
-        console.log(" App.tsx VITE_OIDC_AUTHORITY::: ", import.meta.env.VITE_OIDC_AUTHORITY);
-        console.log(" App.tsx VITE_OIDC_CLIENT_ID::: ", import.meta.env.VITE_OIDC_CLIENT_ID);
-        console.log(" App.tsx VITE_OIDC_POST_LOGOUT_REDIRECT_URI::: ", import.meta.env.VITE_OIDC_POST_LOGOUT_REDIRECT_URI);
-        console.log(" App.tsx VITE_OIDC_REDIRECT_URI::: ", import.meta.env.VITE_OIDC_REDIRECT_URI);
-        console.log(" App.tsx VITE_BASE_URL::: ", import.meta.env.VITE_BASE_URL);
-
-
         if (!hasAuthParams() && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
             auth.signinRedirect();
         }

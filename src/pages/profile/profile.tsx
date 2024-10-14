@@ -207,7 +207,7 @@ export default function ProfilePage() {
     useEffect(() => {
         setLoading(true);
         // TODO()
-        getUserById(user.profile?.sub)
+        getUserById(user?.profile?.sub, user?.access_token)
             .then((response) => {
                 setUser(response.data);
             })
@@ -217,7 +217,7 @@ export default function ProfilePage() {
             .finally(() => {
                 setLoading(false);
             });
-    }, []);   
+    }, [user?.profile?.sub]);   
     
     if (loading) return null;
     

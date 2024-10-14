@@ -12,6 +12,18 @@ export function refreshToken() {
     );
 }
 
-export function getUserById(id: string) { 
-    return api.get(`/keycloak/users/${id}`);
+export function getUserById(id: string, access_token: string) { 
+    const urlBase = import.meta.env.VITE_BASE_URL;
+    return fetch(`${urlBase}/keycloak/users/${id}`, { 
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${access_token}`,
+            'Content-Type': 'application/json',
+        }
+     })
+     .then(fetchResponse => fetchResponse.json())
+     .then(response => response)
+     .catch(err => {
+        console.log("❌ error ❌ ", err);
+     });
 }
