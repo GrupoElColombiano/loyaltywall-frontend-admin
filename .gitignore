@@ -1,3 +1,39 @@
+<<<<<<< HEAD
 node_modules/
 .env
 .env.production
+=======
+# Debug
+.pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+*.log
+lerna-debug.log*
+
+# Dependencies
+.vite
+*.local
+/node_modules
+/dist
+/dist-ssr
+
+# Editor directories and files
+!.vscode/extensions.json
+.DS_Store
+.idea
+.vscode/*
+*.njsproj
+*.ntvs*
+*.sln
+*.suo
+*.sw?
+
+# Local env files
+.env
+.env.development
+.env.production
+.env*.local
+>>>>>>> b7a8374d2c180da3267215a1443479a30bb4000e
