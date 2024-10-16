@@ -42,7 +42,7 @@ interface IModalDataProps {
     name?: string;
     description?: string;
     setPlanId?: (id: string) => void;
-    setEditData: (args: any) => void;
+    setEditData?: (args: any) => void;
 }
 
 interface IModalPayPal {

@@ -134,7 +134,7 @@ export default function ModalPlanRates({ editData, modal, setModal, setEditData 
             editData?.id ?
                 updatedArray :
                 [...modal.data, refactoredData];
-        setEditData({});
+        setEditData && setEditData({});
         setModal({
             open: false,
             data: updatedData
@@ -150,7 +150,7 @@ export default function ModalPlanRates({ editData, modal, setModal, setEditData 
 
         setDateEnd(null);
 
-        setEditData({});
+        setEditData && setEditData({});
         
         setModal({
             ...modal,
