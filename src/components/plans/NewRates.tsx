@@ -57,7 +57,7 @@ export default function NewRates({ rates, setRates, handleUpdate }: {  rates: Ra
             }
         });        
     };  
-
+    console.log("rates", rates);
     return (
         <PlansContainer>
             {rates?.map((rate, index) => (
@@ -125,12 +125,19 @@ export default function NewRates({ rates, setRates, handleUpdate }: {  rates: Ra
                                         </TableCell>
                                         {(rate?.time !== "Indefinido") && rate?.date_start && (
                                             <TableCell component="th" scope="row">
-                                                {(rate?.date_end ?? "") >= new Date().toISOString()
-                                                    ? (
-                                                        <Chip label={t("Constants.status.current")} style={{ backgroundColor: "#4CAF50", color: "#1B5E20" }} />
-                                                    ) : (
-                                                        <Chip label={t("Constants.status.defeated")} style={{ backgroundColor: "#EF5350", color: "#C62828" }} />
-                                                    )}
+                                                    {
+                                                        // (rate?.date_end ?? "") >= new Date().toISOString()
+                                                        `${rate?.date_end}T23:59:59.001Z` || "" >= new Date().toISOString()
+                                                            ? (
+                                                                <Chip
+                                                                    label={t("Constants.status.current")}
+                                                                    style={{ backgroundColor: "#4CAF50", color: "#1B5E20" }} />
+                                                            ) : (
+                                                                <Chip
+                                                                    label={t("Constants.status.defeated")}
+                                                                    style={{ backgroundColor: "#EF5350", color: "#C62828" }} />
+                                                            )
+                                                    }
                                             </TableCell>
                                         )}
                                     </TableRow>

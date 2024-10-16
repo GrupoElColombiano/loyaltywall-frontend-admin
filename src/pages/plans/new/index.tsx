@@ -77,12 +77,20 @@ export default function NewPlanPage() {
         open: false,
         data: []
     });
-
-    const [editProduct] = useState<INewPlan>({} as INewPlan);
+    console.log("modalRate", modalRate);
+    const [editProduct, setEditProduct] = useState<INewPlan>({} as INewPlan);
     const [editRate, setEditRate] = useState<Rate>({} as Rate);
 
     const [isActivate, setIsActivate] = useState<boolean>(false);
     const [btnLoading, setBtnLoading] = useState<boolean>(false);
+    console.log("🔥", {
+        modalProduct,
+        modalRate,
+        editProduct,
+        editRate,
+        isActivate,
+        btnLoading
+    });
     // Constants
     const hasAllProduct = modalProduct?.data?.some((product: any) => product?.product?.all_product === true);
     const hasUndefinedRate = modalRate?.data?.some((rate: any) => rate?.time === "Indefinido");
@@ -165,8 +173,9 @@ export default function NewPlanPage() {
             });
     };
 
-    const handleUpdateRate = (data: Rate) => {
-        setEditRate(data);    
+    const handleUpdateRate = (data: Rate, index: number) => {
+        console.log("🚀 ~ handleUpdateRate ~ data:", { index, data });
+        setEditRate({...data, index});    
 
         setModalRate({
             ...modalRate,
@@ -307,9 +316,16 @@ export default function NewPlanPage() {
                 description={descriptionValue} 
                 handleRefresh={handleRefresh} 
                 setPlanId={setPlanId} // Pasar la función de actualización
+                setEditData={setEditProduct}
             />
 
-            <ModalPlanRates  modal={modalRate} setModal={setModalRate} editData={editRate} setPlanId={setPlanId} />
+            <ModalPlanRates  
+                modal={modalRate} 
+                setModal={setModalRate} 
+                editData={editRate} 
+                setEditData={setEditRate}
+                setPlanId={setPlanId} 
+            />
         </>
     );
 }

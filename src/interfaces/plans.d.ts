@@ -50,4 +50,5 @@ interface Rate {
     is_special:           boolean;
     date_start:           null;
     date_end:             null;
+    index?: number;
 }

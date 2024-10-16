@@ -1,5 +1,5 @@
 // ReactJS
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -10,7 +10,7 @@ import { Checkbox, FormControl, Grid, InputLabel, MenuItem, Modal, Select, TextF
 import { BtnPrimary, BtnSecondary } from "../../../shared/components/Buttons";
 
 // External Dependencies
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import Swal from "sweetalert2";
 
 // Yup
@@ -33,7 +33,7 @@ const arrayTimes = [
     { id: 5, name: "Plan.newPlan.time.yearly", value: "Anual" },
 ];
 
-export default function ModalPlanRates({ editData, modal, setModal }: IModalDataProps) {
+export default function ModalPlanRates({ editData, modal, setModal, setEditData }: IModalDataProps) {
     // Translation
     const { t } = useTranslation();
 
@@ -42,6 +42,22 @@ export default function ModalPlanRates({ editData, modal, setModal }: IModalData
 
     const [dateStart, setDateStart] = useState<Dayjs | null>(editData?.date_start || null);
     const [dateEnd, setDateEnd] = useState<Dayjs | null>(editData?.date_end || null);
+
+    useEffect(() => {
+      if (editData?.is_special) {
+        setChecked(editData?.is_special);
+
+        const dateStartString = `${editData?.date_start}T00:00:00`;
+        const dateEndString = `${editData?.date_end}T21:59:59`;
+        
+        const dateStart = dayjs(dateStartString);
+        const dateEnd = dayjs(dateEndString);
+        
+        setDateStart(dateStart);
+        setDateEnd(dateEnd);
+      }
+    }, [editData])
+    
 
     // Constants
     const newArrayTimes = modal.data.length > 0 ? arrayTimes.filter((time) => time?.value !== "Indefinido") : arrayTimes;
@@ -81,9 +97,18 @@ export default function ModalPlanRates({ editData, modal, setModal }: IModalData
         resolver: yupResolver(validationScheme),
     });
 
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0,
+                v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
     // Functions
     const onSubmit = (data: any) => {
         const refactoredData = {
+            id: generateUUID(),
             date_end: dateEnd?.format("YYYY-MM-DD") ?? null,
             date_start: dateStart?.format("YYYY-MM-DD") ?? null,
             duration: Number(data?.duration ?? 0),
@@ -94,18 +119,25 @@ export default function ModalPlanRates({ editData, modal, setModal }: IModalData
             rate: Number(data?.rate ?? 0),
             time: data?.time ?? "",
         };
-        
+        const updatedArray = modal?.data?.map((item:any, index:number) => {
+            editData?.index, 1, refactoredData
+            if (index === editData?.index) {
+                return refactoredData;
+            }
+            return item;
+        });
         reset();
-
         setChecked(false);
-
         setDateStart(null);
-
         setDateEnd(null);
-
+        const updatedData =
+            editData?.id ?
+                updatedArray :
+                [...modal.data, refactoredData];
+        setEditData({});
         setModal({
             open: false,
-            data: [...modal.data, refactoredData]
+            data: updatedData
         });
     };
 
@@ -118,6 +150,8 @@ export default function ModalPlanRates({ editData, modal, setModal }: IModalData
 
         setDateEnd(null);
 
+        setEditData({});
+        
         setModal({
             ...modal,
             open: false
@@ -249,6 +283,7 @@ export default function ModalPlanRates({ editData, modal, setModal }: IModalData
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         defaultValue={dateStart}
+                                        // defaultValue={new Date()}
                                         disablePast
                                         label={t("Plan.newPlan.modal.rate.dateStart")}
                                         onChange={(newValue) => setDateStart(newValue)}
@@ -256,6 +291,7 @@ export default function ModalPlanRates({ editData, modal, setModal }: IModalData
                                     />
                                     <DatePicker
                                         defaultValue={dateEnd}
+                                        // defaultValue={new Date()}
                                         disablePast
                                         label={t("Plan.newPlan.modal.rate.dateEnd")}
                                         onChange={(newValue) => setDateEnd(newValue)}

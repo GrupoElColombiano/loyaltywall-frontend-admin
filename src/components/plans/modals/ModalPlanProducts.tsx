@@ -128,8 +128,9 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
         { code: "2", label: "Anónimo" },
         { code: "3", label: "Registrado sin pago" }
     ];
+    console.log("::: state :::", state);
 
-    
+    console.log(":::: listTypeUsers :::: ", listTypeUsers);
     const onSubmit2 = () => {
         // Tu lógica aquí //
         // handleSubmit(onSubmit);
@@ -145,6 +146,7 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
             userType: listTypeUsers[parseInt(state?.typeOfUser) - 1].label,
         })
             .then((response) => {
+            console.log("🚀 ~ .then ~ response:", response)
 
                 // console.log(" EL RESPONSE ES ", response    );
 
@@ -272,13 +274,50 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
                 console.log(err);
             });
     }, [siteStorage?.idSite, modal?.data?.length]);
-
+    const productInfo = products.find(product => product.idProduct === selectedProduct);
+    console.log("🚀 ~ useEffect ~ productInfo:", productInfo)
     useEffect(() => {
-        getCategories("", 0, 0, selectedProduct, siteStorage?.idSite)
-            .then((res) => {                
-                setCategories(res?.data?.data);
-            })
-            .catch((err) => console.log(err));
+        console.log("✅", selectedProduct, siteStorage?.idSite)
+        const fetchAllCategories = async () => {
+            const productsWithoutAllProducts = products.filter(productInfo => !productInfo.all_product);
+            const allCategoriesAvailable = await productsWithoutAllProducts.reduce(async (acc, productInfo) => {
+                let temporalAcc = await acc;
+                return await getCategories("", 0, 0, productInfo.idProduct, siteStorage?.idSite).then(response => {
+                    const newCategories = response?.data?.data;
+                    if (newCategories?.length > 0) {
+                        console.log("🚀 ~ returnawaitgetCategories ~ newCategories:", newCategories)
+                        console.log({ temporalAcc })
+                        // return [...temporalAcc, newCategories];
+                        return temporalAcc.concat(newCategories);
+                    }
+                    return acc;
+                })
+                .catch(error => console.log("ERROR", error));
+            }, []);
+            console.log("🚀 :::: allCategoriesAvailable :::: 🚀 ", allCategoriesAvailable);
+            // setCategories(allCategoriesAvailable);
+            allCategoriesAvailable.forEach((element:any) => {
+                append({
+                    category: element?.idCategory,
+                    amount: 1,
+                    limited: false,
+                    duration: 1,
+                });
+            });
+        };
+        console.log("🧯", {fields});
+        if (productInfo?.all_product) {
+            console.log("🧯 Todos los productos 🧯")
+            fetchAllCategories();
+        }else {
+            console.log("🧯 Un sólo producto 🧯")
+            getCategories("", 0, 0, selectedProduct, siteStorage?.idSite)
+                .then((res) => {  
+                    console.log("✅", res);              
+                    setCategories(res?.data?.data);
+                })
+                .catch((err) => console.log(err));
+        }
     }, [siteStorage?.idSite, selectedProduct]); 
 
     // console.log("EditData: ", editData);
@@ -306,6 +345,7 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
     const selectedProductInfo = products?.find(p => p.idProduct === selectedProduct) || null;
     console.log("🔥 selectedProductInfo 🔥", selectedProductInfo);
     console.log("++ products ++", products);
+    console.log("💊 💊", !(categories?.length === fields.length && productInfo?.all_product))
     return (
         <Modal
             aria-describedby="modal-modal-description"
@@ -369,7 +409,7 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
                                 <TableBody>
                                     {
 
-                                        fields.map((category, index) => (
+                                        !productInfo?.all_product && fields.map((category, index) => (
                                             <TableRow key={index}>
                                                 <TableCell>
                                                     <Grid container spacing={1} alignItems="center" justifyContent="space-between">
@@ -531,7 +571,7 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
                                         </TableRow>
                                     ))*/
                                     }
-                                    {!(categories?.length === fields.length) && (
+                                    {!(categories?.length === fields.length) && !productInfo?.all_product && (
                                         <TableRow>
                                             <TableCell colSpan={7} onClick={handleAppend} style={{ cursor: "pointer" }}>
                                                 <MainTextTitle>+ {t("Plan.newPlan.modal.categories.addCategory")}</MainTextTitle>
