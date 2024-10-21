@@ -87,6 +87,7 @@ export default function NewProducts(
         // Aquí puedes llamar una función para guardar los cambios
         // Por ejemplo: saveCategoryAccessAmount(categoryAccess.id, editAmount);
         setEditingId(0);
+        setEditUnlimited(false);
 
         updateCategorieProduct(categoryAccess.idPlansProductCategory, categoryAccess).then((response) => {
 
@@ -284,68 +285,78 @@ export default function NewProducts(
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {product.category_access.map((categoryAccess) => (
-                                        <TableRow key={categoryAccess.id}>
-                                            
-                                            <TableCell component="th" scope="row">
-                                                {categoryAccess.category.name}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {editingId === categoryAccess.id ? (
-                                                    <TextField
-                                                        value={editAmount}
-                                                        onChange={(e) => setEditAmount(parseInt(e.target.value))}
-                                                    />
-                                                ) : (
-                                                    categoryAccess.amount
-                                                )}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {editingId === categoryAccess.id ? (
-                                                    <TextField
-                                                        value={editingDuration}
-                                                        onChange={(e) => setEditingDuration(parseInt(e.target.value))}
-                                                    />
-                                                ) : (
-                                                    categoryAccess.duration
-                                                )}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                        
-                                                            color="primary"
-                                                            defaultChecked={categoryAccess.unlimited}
-                                                        
-                                                            onChange={(event) => handleLimitedChange(categoryAccess, event)}
+                                    {product.category_access.map((categoryAccess) => {
+                                        console.log("🚀 ~ {product.category_access.map ~ categoryAccess:", categoryAccess);
+                                        return (
+                                            <TableRow key={categoryAccess.id}>
+                                                
+                                                <TableCell component="th" scope="row">
+                                                    {categoryAccess.category.name}
+                                                </TableCell>
+                                                <TableCell align="center">
+                                                    {editingId === categoryAccess.id ? (
+                                                        <TextField
+                                                            type="number"
+                                                            value={editAmount}
+                                                            onChange={(e) => setEditAmount(parseInt(e.target.value))}
                                                         />
-                                                    }
-                                                    label=""
-                                                />
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {editingId === categoryAccess.id ? (
-                                                    <IconButton onClick={() => handleSaveClick(categoryAccess)}>
-                                                        <Tooltip title={t("Constants.tooltip.save")}>
-                                                            <SaveOutlined sx={{ color: "#4073FF" }} />
+                                                    ) : (
+                                                        categoryAccess.amount
+                                                    )}
+                                                </TableCell>
+                                                <TableCell align="center">
+                                                    {editingId === categoryAccess.id ? (
+                                                        <TextField
+                                                            type="number"
+                                                            value={editingDuration}
+                                                            onChange={(e) => setEditingDuration(parseInt(e.target.value))}
+                                                        />
+                                                    ) : (
+                                                        categoryAccess.duration
+                                                    )}
+                                                </TableCell>
+                                                <TableCell align="center">
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                color="primary"
+                                                                checked={categoryAccess?.unlimited || (editingId === categoryAccess.id && editUnlimited)}
+                                                                defaultChecked={categoryAccess.unlimited}
+                                                                onChange={(event) => {
+                                                                    console.log("onClick");
+                                                                    if (editingId === categoryAccess.id) {
+                                                                        console.log("::: onChange executed :::")
+                                                                        handleLimitedChange(categoryAccess, event)
+                                                                    }
+                                                                }}
+                                                            />
+                                                        }
+                                                        label=""
+                                                    />
+                                                </TableCell>
+                                                <TableCell align="center">
+                                                    {editingId === categoryAccess.id ? (
+                                                        <IconButton onClick={() => handleSaveClick(categoryAccess)}>
+                                                            <Tooltip title={t("Constants.tooltip.save")}>
+                                                                <SaveOutlined sx={{ color: "#4073FF" }} />
+                                                            </Tooltip>
+                                                        </IconButton>
+                                                    ) : (
+                                                        <IconButton onClick={() => handleEditClick(categoryAccess)}>
+                                                            <Tooltip title={t("Constants.tooltip.edit")}>
+                                                                <EditOutlined sx={{ color: "#4073FF" }} />
+                                                            </Tooltip>
+                                                        </IconButton>
+                                                    )}
+                                                    <IconButton onClick={() => handleCategoryDelete(categoryAccess)}>
+                                                        <Tooltip title={t("Constants.tooltip.delete")}>
+                                                            <DeleteOutlined sx={{ color: "#EF5350" }} />
                                                         </Tooltip>
                                                     </IconButton>
-                                                ) : (
-                                                    <IconButton onClick={() => handleEditClick(categoryAccess)}>
-                                                        <Tooltip title={t("Constants.tooltip.edit")}>
-                                                            <EditOutlined sx={{ color: "#4073FF" }} />
-                                                        </Tooltip>
-                                                    </IconButton>
-                                                )}
-                                                <IconButton onClick={() => handleCategoryDelete(categoryAccess)}>
-                                                    <Tooltip title={t("Constants.tooltip.delete")}>
-                                                        <DeleteOutlined sx={{ color: "#EF5350" }} />
-                                                    </Tooltip>
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    })}
                                 </TableBody>
                             </Table>
                         </TableContainer>
@@ -353,84 +364,5 @@ export default function NewProducts(
                 </SectionContainer>
             ))}
         </PlansContainer>
-        /*<PlansContainer>
-            {products.map((product) => (
-                <SectionContainer key={product.idProduct}>
-                    <HeaderTitle>
-                        <Typography variant="body1" component="h3">
-                            {product.name}
-                        </Typography>
-                        <div>
-                            
-                            <IconButton onClick={() => handleCategoryProductDelete(product)}>
-                                <Tooltip title={t("Constants.tooltip.delete")}>
-                                    <DeleteOutlined  sx={{ color: "#EF5350" }} />
-                                </Tooltip>
-                            </IconButton>
-                        </div>
-                    </HeaderTitle>
-                    <BodyContainer>
-                        <TableContainer>
-                            <Table sx={{ minWidth: 650 }} size="small">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>
-                                            {t("Constants.table.header.categories")}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            {t("Constants.table.header.quantity")}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            {t("Constants.table.header.duration")}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            Acciones
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {product.category_access.map((categoryAccess) => (
-                                        <TableRow key={categoryAccess.id}>
-                                            <TableCell component="th" scope="row">
-                                                {categoryAccess.category.name}
-                                            </TableCell>
-                                           
-                                            <TableCell align="center">
-                                                {editingId === categoryAccess.id ? (
-                                                    <TextField
-                                                        value={editAmount}
-                                                        onChange={(e) => setEditAmount(e.target.value)}
-                                                    />
-                                                ) : (
-                                                    categoryAccess.amount
-                                                )}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {categoryAccess.duration}
-                                            </TableCell>
-
-                                            <TableCell align="center" onClick={() => handleEditClick(categoryAccess)}>
-                                                <IconButton>
-                                                    <Tooltip title={t("Constants.tooltip.edit")}>
-                                                        <EditOutlined sx={{ color: "#4073FF" }} />
-                                                    </Tooltip>
-                                                </IconButton>
-                                            
-                                                <IconButton onClick={() => handleCategoryDelete(categoryAccess)}>
-                                                    <Tooltip title={t("Constants.tooltip.delete")}>
-                                                        <DeleteOutlined  sx={{ color: "#EF5350" }} />
-                                                    </Tooltip>
-                                                </IconButton>
-                                            </TableCell>
-                                            
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </BodyContainer>
-                </SectionContainer>
-            ))}
-        </PlansContainer>*/
     );
 }

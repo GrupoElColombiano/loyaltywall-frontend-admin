@@ -60,6 +60,7 @@ export default function ListPlans() {
     const handlePageChange = (params: { searchText: string, page: number, limitCurrent: number }) => {
         setLimit(params.limitCurrent);
         setPage(params.page);
+        console.log("Executed here::1");
         getListPlans(params.page, params.limitCurrent, params.searchText, "", (result: any) => {
             if (result.code == "ERR_BAD_REQUEST") {
                 setRows([]);

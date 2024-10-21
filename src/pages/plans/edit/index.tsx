@@ -1,6 +1,6 @@
 // ReactJS
 import { useForm } from "react-hook-form";
-import { useLocation,  useParams } from "react-router-dom";
+import { useLocation,  useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -18,7 +18,7 @@ import NewProducts from "../../../components/plans/NewProducts";
 import NewRates from "../../../components/plans/NewRates";
 
 // Services
-// import { updatePlan } from "../../../service/plans";
+import { updatePlan } from "../../../service/plans";
 
 // Yup
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -37,9 +37,10 @@ import { updateStatePlan } from "../../../service/plans";
 
 export default function EditPlanPage() {
     // Navigation
-    // const navigation = useNavigate();
+    const navigation = useNavigate();
     const { planId } = useParams();
     const { state } = useLocation();
+    console.log("🚀 ~ EditPlanPage ~ state:", state)
 
     // LocalStorage
     const siteStorage = JSON.parse(localStorage.getItem("siteUser") || "{}"); 
@@ -98,13 +99,51 @@ export default function EditPlanPage() {
     // Functions
     const onSubmit = (data: any) => {
         console.log(" 3) data::: ", data);
-
-        if (modalProduct?.data?.length === 0) return;
-
-        if ((modalRate?.data?.length === 0) && state?.typeOfUser === "Suscrito") return;         
+        console.log("modalProduct :::", modalProduct);
+        console.log("modalRate :::", modalRate);     
 
         setBtnLoading(true);
 
+        const updatedPlan = {
+            name: data.name,
+            description: data.description,
+            isActive: state.plan.isActive,
+            site: state.plan.idSite,
+            idVersionPlan: state.plan.newVersion
+        };
+
+        updatePlan(state?.plan?.idPlan, updatedPlan)
+            .then((response) => {
+                console.log(":::: response ::::", response);
+                Swal.fire({
+                    confirmButtonColor: "#0045FF",
+                    confirmButtonText: t("Alert.button.confirm"),
+                    icon: "success",
+                    text: t("Alert.save.text"),
+                    title: t("Alert.save.title"),
+                }).then((result) => {
+                    console.log(":::: result ::::", result);
+                    if (result.isConfirmed) {
+                        navigation("/plans");
+                    }
+                });
+            })
+            .catch(() => {
+                Swal.fire({
+                    confirmButtonColor: "#0045FF",
+                    confirmButtonText: t("Alert.button.confirm"),
+                    icon: "error",
+                    text: t("Alert.error.text"),
+                    title: t("Alert.error.title"),
+                });
+            })
+            .finally(() => {
+                setBtnLoading(false);
+            });
+
+        if (modalProduct?.data?.length === 0) return;
+
+        if ((modalRate?.data?.length === 0) && state?.typeOfUser === "Suscrito") return;    
     };   
 
     const handleChangeStatus = (event: any) => {
@@ -216,7 +255,7 @@ export default function EditPlanPage() {
                 {t("Plan.view.typeOfUser")}:{" "}
                     
                 <Typography variant="body1" component="span">
-                    {state?.typeOfUser}
+                    {state?.typeOfUser} --
                 </Typography>
             </Typography>
 

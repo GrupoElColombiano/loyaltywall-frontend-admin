@@ -52,13 +52,14 @@ interface TypeUser {
 export default function ModalPlanProducts({ editData, modal, setModal, planId, handleRefresh, name, description, setPlanId }: IModalDataProps) {
     // Translation
     const { t } = useTranslation();
-
+    console.log(":: planId ::", planId);
     const [currentPlanId, setCurrentPlanId] = useState(planId || null);
 
     useEffect(() => {
         setCurrentPlanId(planId!);
     }, [planId]);
 
+    const isEditSource = Boolean(planId);
 
     // LocalStorage
     const siteStorage = JSON.parse(localStorage.getItem("siteUser") || "{}"); 
@@ -113,37 +114,37 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
     useEffect(() => {
         remove();
     }, [modal?.open]);
-    
-
-    // useEffect(() => {
-    //     if (fieldsArray.length > 0) {
-    //         setFields(fieldsArray);
-    //     }
-    // }, [fieldsArray]);
 
     const { state } = useLocation();
+    console.log("🚀 ~ ModalPlanProducts ~ state:", state)
     
     const listTypeUsers: readonly TypeUser[] = [
         { code: "1", label: "Suscrito" },
         { code: "2", label: "Anónimo" },
         { code: "3", label: "Registrado sin pago" }
     ];
-    console.log("::: state :::", state);
-
-    console.log(":::: listTypeUsers :::: ", listTypeUsers);
+    
+    console.log({ name, description })
     const onSubmit2 = () => {
+        console.log("🔥 onSubmit2 🔥");
+        console.log("::: state :::", state);
+        console.log(":::: listTypeUsers :::: ", listTypeUsers);
+        console.log("::: parseInt(state?.typeOfUser) :::", parseInt(state?.typeOfUser))
+        const typeOfUserWhenEdit = listTypeUsers?.find(typeOfUser => typeOfUser.label === state?.typeOfUser)?.code;
         // Tu lógica aquí //
         // handleSubmit(onSubmit);
         // handleClose(); 
-     
+        const typeOfUserValidated = isEditSource ? typeOfUserWhenEdit : state?.typeOfUser;
+        const nameValidated = isEditSource ? state?.plan?.name : name;
+        const descriptionValidated = isEditSource ? state?.plan?.description : description;
         setProductCategoriesPlan({
             productId: selectedProduct, 
             planId: currentPlanId,  
             categories: fields,
             idSite: siteStorage?.idSite,
-            name: name,
-            description: description,
-            userType: listTypeUsers[parseInt(state?.typeOfUser) - 1].label,
+            name: nameValidated,
+            description: descriptionValidated,
+            userType: listTypeUsers[parseInt(typeOfUserValidated) - 1].label,
         })
             .then((response) => {
             console.log("🚀 ~ .then ~ response:", response)
@@ -494,82 +495,6 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
                                                 </TableCell>
                                             </TableRow>
                                         ))
-                                    /*fields.map((category, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>
-                                                <Grid container spacing={1} alignItems="center" justifyContent="space-between">
-                                                    <Grid item xs={4}>
-                                                        <FormControl fullWidth>
-                                                            <InputLabel id="demo-simple-select-label">{t("Plan.newPlan.modal.categories.category")}</InputLabel>
-                                                            <Select
-                                                                {...register(`categories.${index}.category` as const)}
-                                                                defaultValue={category?.category}
-                                                                fullWidth
-                                                                id={`categories.${index}.name`}
-                                                                label={t("Plan.newPlan.modal.categories.category")}
-                                                                labelId="select-name-label"
-                                                                placeholder={t("Placeholders.select")}
-                                                                variant="outlined"
-                                                            >
-                                                                {handleNotRepeat(categories, index)?.map((category: any) => (
-                                                                    <MenuItem key={category.idCategory} value={category.idCategory}>{category.name}</MenuItem>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item xs={2}>
-                                                        <TextField
-                                                            {...register(`categories.${index}.amount` as const)}
-                                                            defaultValue={category?.amount}
-                                                            fullWidth
-                                                            id={`categories.${index}.amount`}
-                                                            inputProps={{ inputMode: "numeric", min: 1 }}
-                                                            label={t("Plan.newPlan.modal.categories.amount")}
-                                                            type="number"
-                                                            variant="outlined"
-                                                            value={watch(`categories.${index}.limited`) ? 1 : undefined}
-                                                            disabled={watch(`categories.${index}.limited`)}
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={2} sx={{ display: "flex", alignItems: "center" }}>
-                                                        <FormControlLabel
-                                                            control={
-                                                                <Checkbox
-                                                                    {...register(`categories.${index}.limited` as const)}
-                                                                    color="primary"
-                                                                    defaultChecked={category?.limited}
-                                                                    id={`categories.${index}.limited`}
-                                                                    name={`categories.${index}.limited`}
-                                                                />
-                                                            }
-                                                            label={t("Plan.newPlan.modal.categories.limited")}
-                                                        />
-                                                    </Grid>
-                                                    <Divider orientation="vertical" flexItem />
-                                                    <Grid item xs={2}>
-                                                        <TextField
-                                                            {...register(`categories.${index}.duration` as const)}
-                                                            defaultValue={category?.duration}
-                                                            fullWidth
-                                                            id={`categories.${index}.duration`}
-                                                            inputProps={{ inputMode: "numeric", min: 1 }}
-                                                            label={t("Plan.newPlan.modal.categories.duration")}
-                                                            type="number"
-                                                            variant="outlined"
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={1} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                                        <Tooltip title={t("Plan.tooltip.category.delete")}>
-                                                            <DeleteOutline
-                                                                onClick={() => handleRemove({ index: index })}
-                                                                sx={{ color: "red", cursor: "pointer" }}
-                                                            />
-                                                        </Tooltip>
-                                                    </Grid>
-                                                </Grid>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))*/
                                     }
                                     {!(categories?.length === fields.length) && !productInfo?.all_product && (
                                         <TableRow>
