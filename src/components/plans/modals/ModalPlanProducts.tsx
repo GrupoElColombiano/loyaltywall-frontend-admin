@@ -54,6 +54,7 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
     const { t } = useTranslation();
     console.log(":: planId ::", planId);
     const [currentPlanId, setCurrentPlanId] = useState(planId || null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         setCurrentPlanId(planId!);
@@ -126,6 +127,7 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
     
     console.log({ name, description })
     const onSubmit2 = () => {
+        setIsLoading(true);
         console.log("🔥 onSubmit2 🔥");
         console.log("::: state :::", state);
         console.log(":::: listTypeUsers :::: ", listTypeUsers);
@@ -196,6 +198,7 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
             })
             .finally(() => {
                 // console.log("HOLA MUNDO Finally ");
+                setIsLoading(false);
             });
     };
 
@@ -344,9 +347,7 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
         fields[index].duration = Number(value);
     };
     const selectedProductInfo = products?.find(p => p.idProduct === selectedProduct) || null;
-    console.log("🔥 selectedProductInfo 🔥", selectedProductInfo);
-    console.log("++ products ++", products);
-    console.log("💊 💊", !(categories?.length === fields.length && productInfo?.all_product))
+    
     return (
         <Modal
             aria-describedby="modal-modal-description"
@@ -534,8 +535,9 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
                         </BtnSecondary>
                         <BtnPrimary
                             type="button"
-                            disabled={selectedProduct === 0 || (selectedProductInfo?.all_product === false && fields?.length === 0) || disabledButton()}
+                            disabled={selectedProduct === 0 || (selectedProductInfo?.all_product === false && fields?.length === 0) || isLoading || disabledButton()}
                             onClick={onSubmit2}
+                            loading={isLoading}
                         >
                             {t("Constants.button.confirm")}
                         </BtnPrimary>

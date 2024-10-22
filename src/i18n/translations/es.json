@@ -326,7 +326,7 @@
   "Plan.newPlan.modal.rate.dateEnd": "Fecha de finalización",
   "Plan.newPlan.modal.rate.dateStart": "Fecha de inicio",
   "Plan.newPlan.modal.rate.description": "Ingresa la duración del plan en días, meses o años, según corresponda.",
-  "Plan.newPlan.modal.rate.duration": "Duración (días)",
+  "Plan.newPlan.modal.rate.duration": "Duración",
   "Plan.newPlan.modal.rate.rate": "Tarifa",
   "Plan.newPlan.modal.rate.rateDescription": "A continuación, ingresa la tarifa correspondiente al plan, asegurándote de proporcionar el monto correcto.",
   "Plan.newPlan.modal.rate.rateRenewal": "Tarifa de renovación",

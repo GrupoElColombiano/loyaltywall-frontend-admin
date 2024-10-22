@@ -144,7 +144,6 @@ export default function NewPlanPage() {
         };              
 
         setBtnLoading(true);
-
         createPlan(refactoredData)
             .then(() => {
                 Swal.fire({
@@ -203,7 +202,7 @@ export default function NewPlanPage() {
                     isFormDirty={isDirty}
                     title={t("Plan.newPlan.title")}
                 >
-                    <BtnPrimary onClick={() => navigation("/plans")} loading={btnLoading}>
+                    <BtnPrimary type="submit" loading={btnLoading}>
                         <SaveOutlined />
                         {t("Plan.newPlan.button.save")}
                     </BtnPrimary>
