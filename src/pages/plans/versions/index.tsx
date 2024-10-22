@@ -49,9 +49,9 @@ const VersionPlans = () => {
             }
 
             if (result.status == 200) {
-                // toast.success(result.statusText);
-              //  setRows(result.data.data);
-              //  setTotalCategory(result.data.totalPlans);
+            //     toast.success(result.statusText);
+            //    setRows(result.data.data);
+            //    setTotalCategory(result.data.totalPlans);
                 return;
             }
 
@@ -81,9 +81,9 @@ const VersionPlans = () => {
         const fetchPlanVersioning = async () => {
             try {
                 const response = await getPlanVersioning(parseInt(planId!));
-
                 if(response.status == 200){
                     setRows(response.data.versioningData);
+                    setTotalCategory(response.data.versioningData.length)
                 }
                 // setPlanData(response.data);
                 // setLoading(false);
@@ -97,7 +97,7 @@ const VersionPlans = () => {
         fetchPlanVersioning();
         handlePageChange({ searchText: searchText, page: 1, limitCurrent: 10 });
     }, []);
-
+    
     return (
         <PlansContainer>
             <NavHeader title={`${t("Plan.viewVersion.tittle")} (${totalCategory})`}  isBack={true} >

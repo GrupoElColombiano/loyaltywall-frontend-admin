@@ -34,6 +34,7 @@ export default function InputSearch({ onSearch, search, setSearch }: IInputSearc
         <Search
             defaultValue={search}
             id="search"
+            autoComplete="off"
             InputProps={{
                 endAdornment: (
                     <InputAdornment
