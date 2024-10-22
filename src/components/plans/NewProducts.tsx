@@ -41,7 +41,6 @@ export default function NewProducts(
 ) {
     const { t } = useTranslation();
     const [products, setLocalProducts] = useState<Product[]>([]);
-    console.log("🚀 ~ products: 44", products);
 
     const [editingId, setEditingId] = useState(0);
     const [editAmount, setEditAmount] = useState(0);
@@ -126,7 +125,6 @@ export default function NewProducts(
         // console.log(" EL PLAN ID CUANDO SE CREO LLEGO ", planId);
         try {
             const response = await getProductsCategoriesPlan(planId);
-            // console.log(" response ", response);
             setLocalProducts(response.data);
         } catch (error) {
             setLocalProducts([]);
@@ -286,7 +284,7 @@ export default function NewProducts(
                                 </TableHead>
                                 <TableBody>
                                     {product.category_access.map((categoryAccess) => {
-                                        console.log("🚀 ~ {product.category_access.map ~ categoryAccess:", categoryAccess);
+                                        
                                         return (
                                             <TableRow key={categoryAccess.id}>
                                                 

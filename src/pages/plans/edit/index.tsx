@@ -1,7 +1,7 @@
 // ReactJS
 import { useForm } from "react-hook-form";
 import { useLocation,  useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 // Shared
@@ -18,7 +18,7 @@ import NewProducts from "../../../components/plans/NewProducts";
 import NewRates from "../../../components/plans/NewRates";
 
 // Services
-import { updatePlan } from "../../../service/plans";
+import { getRatesByPlan, updatePlan } from "../../../service/plans";
 
 // Yup
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -40,7 +40,6 @@ export default function EditPlanPage() {
     const navigation = useNavigate();
     const { planId } = useParams();
     const { state } = useLocation();
-    console.log("🚀 ~ EditPlanPage ~ state:", state)
 
     // LocalStorage
     const siteStorage = JSON.parse(localStorage.getItem("siteUser") || "{}"); 
@@ -82,6 +81,23 @@ export default function EditPlanPage() {
         description: yup.string(),
     });
 
+    useEffect( () => {
+        const fetchData = async () => {
+            const ratesByPlan = await getRatesByPlan(planId);
+            setModalRate({
+                ...modalRate,
+                data: ratesByPlan?.data || []
+            });
+        }
+        fetchData();
+        return () => {
+            setModalRate({
+                open: false,
+                data: []
+            })
+        }
+    }, [planId])
+
     // Form
     const {
         formState: { isDirty },        
@@ -97,10 +113,7 @@ export default function EditPlanPage() {
     });
 
     // Functions
-    const onSubmit = (data: any) => {
-        console.log(" 3) data::: ", data);
-        console.log("modalProduct :::", modalProduct);
-        console.log("modalRate :::", modalRate);     
+    const onSubmit = (data: any) => {    
 
         setBtnLoading(true);
 
@@ -113,8 +126,7 @@ export default function EditPlanPage() {
         };
 
         updatePlan(state?.plan?.idPlan, updatedPlan)
-            .then((response) => {
-                console.log(":::: response ::::", response);
+            .then(() => {
                 Swal.fire({
                     confirmButtonColor: "#0045FF",
                     confirmButtonText: t("Alert.button.confirm"),
@@ -122,7 +134,6 @@ export default function EditPlanPage() {
                     text: t("Alert.save.text"),
                     title: t("Alert.save.title"),
                 }).then((result) => {
-                    console.log(":::: result ::::", result);
                     if (result.isConfirmed) {
                         navigation("/plans");
                     }
@@ -149,7 +160,6 @@ export default function EditPlanPage() {
     const handleChangeStatus = (event: any) => {
         const { checked } = event.target;
 
-        console.log(" siteStorage ::: ", siteStorage);
         Swal.fire({
             cancelButtonColor: "#7E2EFF",
             cancelButtonText: t("Alert.button.cancel"),
@@ -192,8 +202,6 @@ export default function EditPlanPage() {
                         title: t("Alert.error.title"),
                     });
 
-                }).finally(() => {
-                    console.log("");
                 });
             }
         });

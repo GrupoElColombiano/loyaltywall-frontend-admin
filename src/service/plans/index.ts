@@ -31,6 +31,10 @@ export function getProductsCategoriesPlan(planId: any) {
     return api.get(`/plans/products/categories/${planId}`);
 }
 
+export function getRatesByPlan(planId: any) {
+    return api.get(`/rates/findRatesByPlan/${planId}`);
+}
+
 // eliminar categoria
 export function removeCategorie(planId: number, idPlansProductCategory: number) {
     return api.delete(`/plans/product/categorie/${planId}/${idPlansProductCategory}`, {});
