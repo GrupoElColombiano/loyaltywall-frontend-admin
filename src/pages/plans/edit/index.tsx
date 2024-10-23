@@ -114,7 +114,7 @@ export default function EditPlanPage() {
 
     // Functions
     const onSubmit = (data: any) => {    
-
+        console.log("executed onSubmit -- edit/index");
         setBtnLoading(true);
 
         const updatedPlan = {
@@ -122,9 +122,11 @@ export default function EditPlanPage() {
             description: data.description,
             isActive: state.plan.isActive,
             site: state.plan.idSite,
-            idVersionPlan: state.plan.newVersion
+            idVersionPlan: state.plan.newVersion,
+            rates: modalRate?.data
         };
-
+        console.log({ editRate });
+        console.log("sending" + updatePlan);
         updatePlan(state?.plan?.idPlan, updatedPlan)
             .then(() => {
                 Swal.fire({
@@ -368,7 +370,22 @@ export default function EditPlanPage() {
                     
             </SectionContainer>
             <ModalPlanProducts modal={modalProduct} setModal={setModalProduct} editData={editProduct} planId={planId} handleRefresh={handleRefresh} />
-            <ModalPlanRates modal={modalRate} setModal={setModalRate} editData={editRate}  />
+            <ModalPlanRates
+                modal={modalRate}
+                setModal={setModalRate}
+                editData={editRate}
+                setEditData={(newRate) => {
+                    console.log("new rate: " + newRate);
+                    const updatedDataField = modalRate?.data.concat(newRate)
+                    console.log("🚀 ~ EditPlanPage ~ updatedDataField:", updatedDataField)
+                    console.log("🚀 ~ EditPlanPage ~ modalRate:", modalRate)
+                    // setModalRate({
+                    //     ...modalRate,
+                    //     data: updatedDataField
+                    // })
+                    setEditRate
+                }}
+            />
         </PlansContainer>
     );
 }

@@ -80,7 +80,7 @@ export default function ModalPlanRates({ editData, modal, setModal, setEditData 
 
     // Form
     const {
-        handleSubmit,
+        // handleSubmit,
         register,
         reset,
         watch,
@@ -107,6 +107,7 @@ export default function ModalPlanRates({ editData, modal, setModal, setEditData 
 
     // Functions
     const onSubmit = (data: any) => {
+        console.log("executed onSubmit modalPlanRates", )
         const refactoredData = {
             id: generateUUID(),
             date_end: dateEnd?.format("YYYY-MM-DD") ?? null,
@@ -166,7 +167,14 @@ export default function ModalPlanRates({ editData, modal, setModal, setEditData 
             open={modal.open}
         >
             <ModalContainer>
-                <SectionContainer onSubmit={handleSubmit(onSubmit)}>
+                <SectionContainer onSubmit={(event) => {
+                    console.log("onsubmit here 1", watch())
+                    event.preventDefault();
+                    event.stopPropagation();
+                    // handleSubmit(onSubmit)
+                    onSubmit(watch());
+                    console.log("onsubmit here 2")
+                }}>
                     <Typography variant="body1" component="h3" sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         {t("Plan.newPlan.modal.rate.title")}
                     </Typography>
