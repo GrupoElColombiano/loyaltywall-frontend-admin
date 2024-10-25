@@ -170,7 +170,8 @@ const HeaderAuth = () => {
         setOpenModalRol(false);
         const allSite = data?.find(item => item.idSite === siteSelected);
         localStorage.setItem("siteUser", JSON.stringify(allSite));
-        navigate("/");
+        // navigate("/");
+        window.location.reload();
     };
 
     const handleFinishChangeRol = () => {
