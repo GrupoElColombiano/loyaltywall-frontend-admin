@@ -59,7 +59,7 @@ const HeaderAuth = () => {
     const [roleSelected, setRoleSelected] = useState("");
     const [siteSelected, setSiteSelected] = useState("");
 
-    const [isLoaded, setIsLoaded] = useState(false);
+    // const [isLoaded, setIsLoaded] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [openModalRol, setOpenModalRol] = useState(false);
 
@@ -185,6 +185,7 @@ const HeaderAuth = () => {
         getUserById(user?.profile?.sub, user?.access_token)
             .then((response) => {
                 // setUserDetail(response?.data);
+                console.log("User-response", response);
                 setUserDetail(response);
             })
             .catch((error) => {  
@@ -199,16 +200,18 @@ const HeaderAuth = () => {
                 }
             })
             .finally(() => {                
-                setIsLoaded(false);
+                // setIsLoaded(false);
             });
     };
 
     // Effects
     useEffect(() => {
-        setIsLoaded(true);          
-
-        getUser();
-    }, [user?.profile?.sub]); 
+        console.log("💊 user?.profile?.sub 💊", user?.profile?.sub);
+        // setIsLoaded(true);          
+        if (userDetail === null && user?.profile?.sub !== undefined) {
+            getUser();
+        }
+    }, [user?.profile?.sub, userDetail]); 
 
     useEffect(() => {
         if(!rolStorage && !siteStorage && user?.profile?.sub != null && accessToken != null){
@@ -225,22 +228,22 @@ const HeaderAuth = () => {
         }
     }, [roleSelected]);     
 
-    if (isLoaded) return (
-        <AppBar position="static">
-            <Box
-                display="flex"
-                alignItems="center"
-                width={"100%"}
-                height={"100%"}
-                sx={{ flexDirection: { xs: "column", md: "row" } }}
-            >
-                <Box marginLeft="auto" height="100%"  sx={{ display: "flex", flexDirection: "row", gap: "20px" }}>
-                    <Translate />
-                    <Divider orientation="vertical" flexItem />
-                </Box>
-            </Box>
-        </AppBar>
-    );     
+    // if (isLoaded) return (
+    //     <AppBar position="static">
+    //         <Box
+    //             display="flex"
+    //             alignItems="center"
+    //             width={"100%"}
+    //             height={"100%"}
+    //             sx={{ flexDirection: { xs: "column", md: "row" } }}
+    //         >
+    //             <Box marginLeft="auto" height="100%"  sx={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+    //                 <Translate />
+    //                 <Divider orientation="vertical" flexItem />
+    //             </Box>
+    //         </Box>
+    //     </AppBar>
+    // );     
 
     return (
         <>
