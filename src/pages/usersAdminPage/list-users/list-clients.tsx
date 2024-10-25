@@ -1,7 +1,7 @@
 // ReactJS
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button  } from "@mui/material";
+// import { Button  } from "@mui/material";
 // Hooks
 // import useModuleActions from "../../hooks/useModuleActions";
 
@@ -19,7 +19,7 @@ import TableComponent from "../../../shared/components/Table";
 import { UsersClientHeader } from "../../../constants/headers";
 
 // Services
-import { getAllSites } from "../../../service/sites";
+import { authenticationClient, getAllSites } from "../../../service/sites";
 import { getUsersListClientsPagination } from "../../../service/usersKeycloack/usersKeycloack.service";
 
 // Styled
@@ -28,7 +28,9 @@ import { UsersContainer } from "./styled";
 // Icons
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ModalAuthClient from "../modals/ModalAuthClient";
+// import ModalAuthClient from "../modals/ModalAuthClient";
+// import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 export default function UsersClientsPage() {
     // Translation
@@ -146,10 +148,10 @@ export default function UsersClientsPage() {
 
     }, [selectedSite]);  
     
-    const [modal, setModal] = useState({
-        data: [],
-        open: true
-    });   
+    // const [modal, setModal] = useState({
+    //     data: [],
+    //     open: true
+    // });   
 
 
     const handleConfirmToken= (token: any) => {
@@ -163,21 +165,34 @@ export default function UsersClientsPage() {
         });
     };
 
-    const openModalAuthClient = () =>{
-        setModal({
-            data: [],
-            open: true
+    useEffect(() => {
+        authenticationClient('', '')
+        .then((result) => {             
+            const accessToken =  result.data.access_token;
+            localStorage.setItem("accessTokenClient", accessToken);
+            handleConfirmToken(accessToken);
+        })
+        .catch((err: any) => {
+            toast.error("" + err);
         });
-    };
+    }, [])
+    
+
+    // const openModalAuthClient = () =>{
+    //     setModal({
+    //         data: [],
+    //         open: true
+    //     });
+    // };
 
     return (
         <UsersContainer>
             <NavHeader title={`${t("Users.client.tittle")} (${totalUSers})`} >
-                <Button onClick={openModalAuthClient}>Autenticarse </Button>
+                {/* <Button onClick={openModalAuthClient}>Autenticarse </Button> */}
                 <InputSearch onSearch={handleSearchChange} setSearch={setSearchText} search={searchText} />
             </NavHeader>
 
-            <ModalAuthClient modal={modal} setModal={setModal} editData={null} handleConfirmToken={handleConfirmToken}/>
+            {/* <ModalAuthClient modal={modal} setModal={setModal} editData={null} handleConfirmToken={handleConfirmToken}/> */}
 
             <div 
                 className={`animated-component ${isFilterVisible ? "show" : ""}`}
