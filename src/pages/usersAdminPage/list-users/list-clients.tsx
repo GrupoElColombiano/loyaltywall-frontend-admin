@@ -166,7 +166,7 @@ export default function UsersClientsPage() {
     };
 
     useEffect(() => {
-        authenticationClient('', '')
+        authenticationClient()
         .then((result) => {             
             const accessToken =  result.data.access_token;
             localStorage.setItem("accessTokenClient", accessToken);

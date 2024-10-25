@@ -21,6 +21,6 @@ export function updateSite(id: number, data: any) {
     return api.patch(`/sites/${id}`, data);
 }
 
-export function authenticationClient(username: string, password: string) {
-    return apiClient.post("/users/authenticate", { username, password });
+export function authenticationClient() {
+    return apiClient.post("/users/authenticate");
 }

@@ -37,7 +37,7 @@ export default function ModalAuthClient({ modal, setModal, handleConfirmToken }:
             return;
         }
 
-        authenticationClient(email, password)
+        authenticationClient()
             .then((result) => {             
 
                 const accessToken =  result.data.access_token;
