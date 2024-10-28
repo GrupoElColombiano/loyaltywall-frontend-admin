@@ -78,7 +78,7 @@ interface ITemplatesBody {
     _id: string;
     description: string;
     html: string;
-    isActive: boolean;
+    isActived: boolean;
     name: string;
     published: boolean;
 }

@@ -458,7 +458,7 @@ function TemplatesBody({ tableRows, isSelected, handleClick }: { tableRows: ITem
                         <StyledTableCell align="left">{row.name}</StyledTableCell>
                         <StyledTableCell align="left">{row.description}</StyledTableCell>
                         <StyledTableCell align="center">
-                            {row.isActive
+                            {row.isActived
                                 ? <Chip label={t("Constants.status.active")} style={{ backgroundColor: "#4CAF50", color: "#1B5E20" }} />
                                 : <Chip label={t("Constants.status.inactive")} style={{ backgroundColor: "#0000001F", color: "#606A84" }} />
                             }
