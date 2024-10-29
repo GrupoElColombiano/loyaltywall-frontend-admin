@@ -1,7 +1,7 @@
 // ReactJS
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 // import ReactQuill from "react-quill";
 import Card from "@mui/material/Card";
@@ -9,13 +9,14 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import { Grid, Select, MenuItem, FormControl, InputLabel } from "@mui/material"; // Button
+import ReactQuill from "react-quill";
 
 
 // MUI
-import { Box, FormControlLabel, Switch, TextField, Typography } from "@mui/material"; // Tab, Tabs,
+import { Box, FormControlLabel, Tab, Tabs, Switch, TextField, Typography } from "@mui/material";
 
 // External Dependencies
-// import Editor from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
 
 // Yup
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -39,7 +40,7 @@ import { Form } from "./styled";
 import "react-quill/dist/quill.snow.css";
 import { getListPlans } from "../../../service/plans/plans.service";
 
-/*
+
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -86,206 +87,204 @@ const formats = [
     "link", "image"
 ];
 
-  const planCurrent = [
-        {
-            name: "Plan premium",
-            description: "Prueba de plan",
-            rate: [
-                {
-                    id: 93,
-                    time: "Quincenal",
-                    rate: "12.00",
-                    rate_special: "15.00",
-                    rate_special_renewal: "18.00",
-                    rate_renewal: "120.00",
-                    duration: 14,
-                    is_special: true,
-                    date_start: "2023-12-05",
-                    date_end: "2023-12-19"
-                },
-                {
-                    id: 94,
-                    time: "Quincenal",
-                    rate: "12.00",
-                    rate_special: "15.00",
-                    rate_special_renewal: "18.00",
-                    rate_renewal: "120.00",
-                    duration: 14,
-                    is_special: true,
-                    date_start: "2023-12-05",
-                    date_end: "2023-12-19"
-                }
-            ],
-            plansProductsCategory: [
-                {
-                    _id: { $oid: "6675ad0b45b354637ce8d889" },
-                    idPlansProductCategory: 1060,
-                    categorysAccess: [
-                        {
-                            frequency: null,
-                            id: 466,
-                            duration: 7,
-                            unlimited: false,
-                            _id: { $oid: "6675ad0b45b354637ce8d88b" },
-                            typeDuration: null,
-                            amount: 2,
-                            category: {
-                                name: "Gratis",
-                                idCategory: 146,
-                                description: "Gratis",
-                                rules: "Premium Suscrito",
-                                is_accessible_for_free: false,
-                                _id: { $oid: "6675ad0b45b354637ce8d88c" }
-                            }
-                        }
-                    ],
-                    product: {
-                        description: "Producto que permite acceder a la seccion de Mundo curioso",
-                        updatedAt: "2024-02-12T17:44:34.816Z",
-                        idProduct: 117,
-                        all_product: false,
-                        _id: { $oid: "6675ad0b45b354637ce8d88a" },
-                        isActive: true,
-                        name: "Mundo curioso",
-                        createdAt: "2024-02-12T17:44:34.816Z"
-                    }
-                },
-                {
-                    idPlansProductCategory: 1059,
-                    _id: { $oid: "6675ad0b45b354637ce8d88d" },
-                    categorysAccess: [
-                        {
-                            duration: 7,
-                            _id: { $oid: "6675ad0b45b354637ce8d88f" },
-                            typeDuration: null,
-                            id: 465,
-                            frequency: null,
-                            amount: 4,
-                            unlimited: false,
-                            category: {
-                                idCategory: 145,
-                                name: "Premium",
-                                rules: "Premium Suscrito",
-                                is_accessible_for_free: false,
-                                description: "Premium",
-                                _id: { $oid: "6675ad0b45b354637ce8d890" }
-                            }
-                        }
-                    ],
-                    product: {
-                        idProduct: 116,
-                        description: "Producto que permite acceder a la seccion de deportes",
-                        _id: { $oid: "6675ad0b45b354637ce8d88e" },
-                        updatedAt: "2024-02-12T17:44:34.816Z",
-                        name: "Deportes",
-                        all_product: false,
-                        isActive: true,
-                        createdAt: "2024-02-12T17:44:34.816Z"
-                    }
-                }
-            ]
-        },
-        {
-            plan: "Plan Free",
-            description: "Prueba de plan free",
-            rate: [
-                {
-                    id: 93,
-                    time: "Quincenal",
-                    rate: "12.00",
-                    rate_special: "15.00",
-                    rate_special_renewal: "18.00",
-                    rate_renewal: "120.00",
-                    duration: 14,
-                    is_special: true,
-                    date_start: "2023-12-05",
-                    date_end: "2023-12-19"
-                },
-                {
-                    id: 94,
-                    time: "Quincenal",
-                    rate: "12.00",
-                    rate_special: "15.00",
-                    rate_special_renewal: "18.00",
-                    rate_renewal: "120.00",
-                    duration: 14,
-                    is_special: true,
-                    date_start: "2023-12-05",
-                    date_end: "2023-12-19"
-                }
-            ],
-            plansProductsCategory: [
-                {
-                    _id: { $oid: "6675ad0b45b354637ce8d889" },
-                    idPlansProductCategory: 1060,
-                    categorysAccess: [
-                        {
-                            frequency: null,
-                            id: 466,
-                            duration: 7,
-                            unlimited: false,
-                            _id: { $oid: "6675ad0b45b354637ce8d88b" },
-                            typeDuration: null,
-                            amount: 2,
-                            category: {
-                                name: "Gratis",
-                                idCategory: 146,
-                                description: "Gratis",
-                                rules: "Premium Suscrito",
-                                is_accessible_for_free: false,
-                                _id: { $oid: "6675ad0b45b354637ce8d88c" }
-                            }
-                        }
-                    ],
-                    product: {
-                        description: "Producto que permite acceder a la seccion de Mundo juridico",
-                        updatedAt: "2024-02-12T17:44:34.816Z",
-                        idProduct: 117,
-                        all_product: false,
-                        _id: { $oid: "6675ad0b45b354637ce8d88a" },
-                        isActive: true,
-                        name: "Mundo curioso",
-                        createdAt: "2024-02-12T17:44:34.816Z"
-                    }
-                },
-                {
-                    idPlansProductCategory: 1059,
-                    _id: { $oid: "6675ad0b45b354637ce8d88d" },
-                    categorysAccess: [
-                        {
-                            duration: 7,
-                            _id: { $oid: "6675ad0b45b354637ce8d88f" },
-                            typeDuration: null,
-                            id: 465,
-                            frequency: null,
-                            amount: 4,
-                            unlimited: false,
-                            category: {
-                                idCategory: 145,
-                                name: "Premium",
-                                rules: "Premium Suscrito",
-                                is_accessible_for_free: false,
-                                description: "Premium",
-                                _id: { $oid: "6675ad0b45b354637ce8d890" }
-                            }
-                        }
-                    ],
-                    product: {
-                        idProduct: 116,
-                        description: "Producto que permite acceder a la seccion de farandula",
-                        _id: { $oid: "6675ad0b45b354637ce8d88e" },
-                        updatedAt: "2024-02-12T17:44:34.816Z",
-                        name: "Deportes",
-                        all_product: false,
-                        isActive: true,
-                        createdAt: "2024-02-12T17:44:34.816Z"
-                    }
-                }
-            ]
-        }
-    ];
-
-*/
+//   const planCurrent = [
+//         {
+//             name: "Plan premium",
+//             description: "Prueba de plan",
+//             rate: [
+//                 {
+//                     id: 93,
+//                     time: "Quincenal",
+//                     rate: "12.00",
+//                     rate_special: "15.00",
+//                     rate_special_renewal: "18.00",
+//                     rate_renewal: "120.00",
+//                     duration: 14,
+//                     is_special: true,
+//                     date_start: "2023-12-05",
+//                     date_end: "2023-12-19"
+//                 },
+//                 {
+//                     id: 94,
+//                     time: "Quincenal",
+//                     rate: "12.00",
+//                     rate_special: "15.00",
+//                     rate_special_renewal: "18.00",
+//                     rate_renewal: "120.00",
+//                     duration: 14,
+//                     is_special: true,
+//                     date_start: "2023-12-05",
+//                     date_end: "2023-12-19"
+//                 }
+//             ],
+//             plansProductsCategory: [
+//                 {
+//                     _id: { $oid: "6675ad0b45b354637ce8d889" },
+//                     idPlansProductCategory: 1060,
+//                     categorysAccess: [
+//                         {
+//                             frequency: null,
+//                             id: 466,
+//                             duration: 7,
+//                             unlimited: false,
+//                             _id: { $oid: "6675ad0b45b354637ce8d88b" },
+//                             typeDuration: null,
+//                             amount: 2,
+//                             category: {
+//                                 name: "Gratis",
+//                                 idCategory: 146,
+//                                 description: "Gratis",
+//                                 rules: "Premium Suscrito",
+//                                 is_accessible_for_free: false,
+//                                 _id: { $oid: "6675ad0b45b354637ce8d88c" }
+//                             }
+//                         }
+//                     ],
+//                     product: {
+//                         description: "Producto que permite acceder a la seccion de Mundo curioso",
+//                         updatedAt: "2024-02-12T17:44:34.816Z",
+//                         idProduct: 117,
+//                         all_product: false,
+//                         _id: { $oid: "6675ad0b45b354637ce8d88a" },
+//                         isActive: true,
+//                         name: "Mundo curioso",
+//                         createdAt: "2024-02-12T17:44:34.816Z"
+//                     }
+//                 },
+//                 {
+//                     idPlansProductCategory: 1059,
+//                     _id: { $oid: "6675ad0b45b354637ce8d88d" },
+//                     categorysAccess: [
+//                         {
+//                             duration: 7,
+//                             _id: { $oid: "6675ad0b45b354637ce8d88f" },
+//                             typeDuration: null,
+//                             id: 465,
+//                             frequency: null,
+//                             amount: 4,
+//                             unlimited: false,
+//                             category: {
+//                                 idCategory: 145,
+//                                 name: "Premium",
+//                                 rules: "Premium Suscrito",
+//                                 is_accessible_for_free: false,
+//                                 description: "Premium",
+//                                 _id: { $oid: "6675ad0b45b354637ce8d890" }
+//                             }
+//                         }
+//                     ],
+//                     product: {
+//                         idProduct: 116,
+//                         description: "Producto que permite acceder a la seccion de deportes",
+//                         _id: { $oid: "6675ad0b45b354637ce8d88e" },
+//                         updatedAt: "2024-02-12T17:44:34.816Z",
+//                         name: "Deportes",
+//                         all_product: false,
+//                         isActive: true,
+//                         createdAt: "2024-02-12T17:44:34.816Z"
+//                     }
+//                 }
+//             ]
+//         },
+//         {
+//             plan: "Plan Free",
+//             description: "Prueba de plan free",
+//             rate: [
+//                 {
+//                     id: 93,
+//                     time: "Quincenal",
+//                     rate: "12.00",
+//                     rate_special: "15.00",
+//                     rate_special_renewal: "18.00",
+//                     rate_renewal: "120.00",
+//                     duration: 14,
+//                     is_special: true,
+//                     date_start: "2023-12-05",
+//                     date_end: "2023-12-19"
+//                 },
+//                 {
+//                     id: 94,
+//                     time: "Quincenal",
+//                     rate: "12.00",
+//                     rate_special: "15.00",
+//                     rate_special_renewal: "18.00",
+//                     rate_renewal: "120.00",
+//                     duration: 14,
+//                     is_special: true,
+//                     date_start: "2023-12-05",
+//                     date_end: "2023-12-19"
+//                 }
+//             ],
+//             plansProductsCategory: [
+//                 {
+//                     _id: { $oid: "6675ad0b45b354637ce8d889" },
+//                     idPlansProductCategory: 1060,
+//                     categorysAccess: [
+//                         {
+//                             frequency: null,
+//                             id: 466,
+//                             duration: 7,
+//                             unlimited: false,
+//                             _id: { $oid: "6675ad0b45b354637ce8d88b" },
+//                             typeDuration: null,
+//                             amount: 2,
+//                             category: {
+//                                 name: "Gratis",
+//                                 idCategory: 146,
+//                                 description: "Gratis",
+//                                 rules: "Premium Suscrito",
+//                                 is_accessible_for_free: false,
+//                                 _id: { $oid: "6675ad0b45b354637ce8d88c" }
+//                             }
+//                         }
+//                     ],
+//                     product: {
+//                         description: "Producto que permite acceder a la seccion de Mundo juridico",
+//                         updatedAt: "2024-02-12T17:44:34.816Z",
+//                         idProduct: 117,
+//                         all_product: false,
+//                         _id: { $oid: "6675ad0b45b354637ce8d88a" },
+//                         isActive: true,
+//                         name: "Mundo curioso",
+//                         createdAt: "2024-02-12T17:44:34.816Z"
+//                     }
+//                 },
+//                 {
+//                     idPlansProductCategory: 1059,
+//                     _id: { $oid: "6675ad0b45b354637ce8d88d" },
+//                     categorysAccess: [
+//                         {
+//                             duration: 7,
+//                             _id: { $oid: "6675ad0b45b354637ce8d88f" },
+//                             typeDuration: null,
+//                             id: 465,
+//                             frequency: null,
+//                             amount: 4,
+//                             unlimited: false,
+//                             category: {
+//                                 idCategory: 145,
+//                                 name: "Premium",
+//                                 rules: "Premium Suscrito",
+//                                 is_accessible_for_free: false,
+//                                 description: "Premium",
+//                                 _id: { $oid: "6675ad0b45b354637ce8d890" }
+//                             }
+//                         }
+//                     ],
+//                     product: {
+//                         idProduct: 116,
+//                         description: "Producto que permite acceder a la seccion de farandula",
+//                         _id: { $oid: "6675ad0b45b354637ce8d88e" },
+//                         updatedAt: "2024-02-12T17:44:34.816Z",
+//                         name: "Deportes",
+//                         all_product: false,
+//                         isActive: true,
+//                         createdAt: "2024-02-12T17:44:34.816Z"
+//                     }
+//                 }
+//             ]
+//         }
+//     ];
 
 const EditTemplate: React.FC = () => {
     // Translations
@@ -302,12 +301,12 @@ const EditTemplate: React.FC = () => {
     const siteStorage = JSON.parse(localStorage.getItem("siteUser") || "{}");
 
     // Refs
-    // const editorRef = useRef<any>(null);
+    const editorRef = useRef<any>(null);
 
     // States
-    // const [editor, setEditor] = useState(data?.html || "");
+    const [editor, setEditor] = useState(data?.html || "");
 
-    // const [tab, setTab] = useState(0);
+    const [tab, setTab] = useState(0);
 
     const [isPublish, setIsPublish] = useState(false);
 
@@ -449,7 +448,7 @@ const EditTemplate: React.FC = () => {
         }
     };
     
-    /*  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         event.preventDefault();
         setTab(newValue);
     };
@@ -461,7 +460,7 @@ const EditTemplate: React.FC = () => {
 
     const handleChangeEditor = () => {
         setEditor(editorRef.current.getValue());
-    };*/
+    };
 
 
     const ResponsiveCard = ({ plan, description, products, rates }: any) => (
@@ -513,6 +512,9 @@ const EditTemplate: React.FC = () => {
     );
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
+            <div style={{ overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 10, paddingBottom: '10px', maxHeight: '90vh' }}>
+
+           
             <NavHeader title={t("Templates.edit.title")} description={t("Templates.edit.description")} isBack isFormDirty={isDirty}>
                 <BtnPrimary onClick={() => setIsPublish(true)} type="submit">
                     <SaveOutlinedIcon />
@@ -563,21 +565,7 @@ const EditTemplate: React.FC = () => {
                 variant="outlined"
             />
 
-            <Box sx={{ height: "500px", overflowY: "scroll", p: 2 }}> {/* Ajusta la altura según tus necesidades */}
-                <Grid container spacing={2}>
-                    {rows.map((plan, index) => (
-                        <Grid item xs={12} sm={6} md={4} key={index}>
-                            <ResponsiveCard
-                                plan={plan.name}
-                                description={plan.description}
-                                products={plan.plansProductsCategory}
-                                rates={plan.rates}
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
-            </Box>
-            {/*<Box sx={{ width: "100%" }}>
+            <Box sx={{ width: "100%" }}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <Tabs value={tab} onChange={handleChange} aria-label="basic tabs example">
                         <Tab label={t("Templates.tabs.editor")} />
@@ -603,7 +591,24 @@ const EditTemplate: React.FC = () => {
                         onMount={handleEditorDidMount}
                     />
                 </CustomTabPanel>
-            </Box>*/}
+            </Box>
+
+            <Box>
+                <Grid container spacing={2}>
+                    {rows.map((plan, index) => (
+                        <Grid item xs={12} sm={6} md={4} key={index}>
+                            <ResponsiveCard
+                                plan={plan.name}
+                                description={plan.description}
+                                products={plan.plansProductsCategory}
+                                rates={plan.rates}
+                            />
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
+
+            </div>
         </Form>
     );
 };
