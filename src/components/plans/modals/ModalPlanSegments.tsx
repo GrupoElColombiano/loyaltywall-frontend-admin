@@ -1,5 +1,5 @@
 // ReactJS
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 // MUI
@@ -17,52 +17,20 @@ import { DeleteOutline, SettingsOutlined } from "@mui/icons-material";
 // Styled
 import { SectionContainer, ModalContainer, BtnContainer, GridContainer, MainTextTitle } from "./styled";
 
-export default function ModalPlanSegments({ modal, setModal, handleRefresh, segments }: any) {
+export default function ModalPlanSegments({ modal, setModal, handleRefresh, segments, selectedIdCategoryId, onClose }: any) {
     const { t } = useTranslation();
  
-    const [temporalData, setTemporalData] = useState<any[]>(modal?.data || [])
-    // Yup
-    // const validationScheme = yup.object().shape({
-    //     categories: yup.array().of(
-    //         yup.object().shape({
-    //             quantity: yup.number().required("Este campo es requerido"),
-    //             category: yup.string().required("Este campo es requerido"),
-    //             duration: yup.number().required("Este campo es requerido"),
-    //             limited: yup.boolean().required("Este campo es requerido"),
-    //         })
-    //     ),
-    // });
-
-    // useForm
-    // const {
-    //     control,
-    //     // handleSubmit,
-    //     register,
-    //     reset,
-    //     watch
-    // } = useForm({
-    //     defaultValues: {
-    //         categories: editData?.categories?.map((item: any) => {
-    //             return {
-    //                 amount: item?.amount,
-    //                 category: item?.idCategory,
-    //                 duration: item?.duration,
-    //                 limited: item?.limited,
-    //             };
-    //         }) || [],
-    //     },
-    //     mode: "all",
-    //     resolver: yupResolver(validationScheme),
-    // });
-
-    // const { fields, append, remove } = useFieldArray({
-    //     control,
-    //     name: "categories",
-    // });
-
-    // useEffect(() => {
-    //     remove();
-    // }, [modal?.open]);
+    const [temporalData, setTemporalData] = useState<any[]>([])
+    
+    useEffect(() => {
+      const filteredData = modal.data.filter((segment:any) => segment.categoryId === selectedIdCategoryId);
+      if (filteredData.length > 0) {
+        setTemporalData(filteredData[0]?.data);
+      }
+      return () => {
+        setTemporalData([])
+      }
+    }, [selectedIdCategoryId])
     
     const onSubmit = () => {
         setModal({
@@ -72,15 +40,8 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, segm
     }
 
     const handleClose = () => {
-        // reset();
         handleRefresh && handleRefresh();
-
-        // fields.forEach((_, index) => remove(index));
-        
-        setModal({
-            ...modal,
-            open: false
-        });
+        onClose();
     }; 
 
     const configuredSegments: number = temporalData?.length || 0;
@@ -234,30 +195,26 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, segm
                                                             </Select>
                                                         )
                                                     }
-                                                    {
-                                                        temporalData.length < 4 && (
-                                                            <div style={{ display: 'flex', alignContent: 'center', alignItems: 'center' }}>
-                                                                <Tooltip title={t("Plan.tooltip.category.delete")}>
-                                                                    <DeleteOutline
-                                                                        onClick={() => handleRemove(index)}
-                                                                        sx={{ color: "red", cursor: "pointer" }}
-                                                                    />
-                                                                </Tooltip>
-                                                            </div>
-                                                        )
-                                                    }
+                                                    <div style={{ display: 'flex', alignContent: 'center', alignItems: 'center' }}>
+                                                        <Tooltip title={t("Plan.tooltip.category.delete")}>
+                                                            <DeleteOutline
+                                                                onClick={() => handleRemove(index)}
+                                                                sx={{ color: "red", cursor: "pointer" }}
+                                                            />
+                                                        </Tooltip>
+                                                    </div>
                                                 </div>
                                            )
                                        })
                                    }
                                    
-                                    {/* {!(categories?.length === fields.length) && !productInfo?.all_product && ( */}
+                                    { temporalData.length < 4 && (
                                         <TableRow>
                                             <TableCell colSpan={7} onClick={handleNewRow} style={{ cursor: "pointer" }}>
                                                 <MainTextTitle>+ {t("Plan.newPlan.modal.segments.addSegment")}</MainTextTitle>
                                             </TableCell>
                                         </TableRow>
-                                    {/* )} */}
+                                    )}
                                 </TableBody>
                             </Table>
                         </TableContainer>

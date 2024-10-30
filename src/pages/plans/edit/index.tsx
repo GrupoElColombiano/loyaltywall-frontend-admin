@@ -67,16 +67,9 @@ export default function EditPlanPage() {
 
     const [modalSegment, setModalSegment] = useState<any>({
         open: false,
-        data: [
-            {
-                segment: 'default',
-                quantity: 0,
-                priority: ''
-            }
-        ]
+        data: []
     });
 
-    console.log("++++", JSON.stringify(modalSegment))
     const segments = [
         {
             value: 'default',
@@ -98,11 +91,13 @@ export default function EditPlanPage() {
             value: 'seniorCitizen',
             label: t('Segments.seniorCitizen')
         }
-    ]
+    ];
 
     const [editProduct] = useState<INewPlan>({} as INewPlan);
     const [editRate, setEditRate] = useState<Rate>({} as Rate);
     const [editSegment] = useState<any>({} as any);
+
+    const [selectedIdCategoryId, setSelectedIdCategoryId] = useState<string>('');
 
     const [isActive, setIsActive] = useState<boolean>(state?.plan?.isActive || false);
     const [btnLoading, setBtnLoading] = useState(false);
@@ -119,9 +114,50 @@ export default function EditPlanPage() {
     });
 
     const handleOpenSegmentModal = (categoryId: string) => {
-        console.log("handleOpenSegmentModal", categoryId);
+        const idCategories = modalSegment?.data?.map((segment:any) => segment.categoryId)
+        if (!idCategories.includes(categoryId)) {
+            setModalSegment({
+                open: true,
+                data: [
+                    ...modalSegment?.data,
+                    {
+                        categoryId,
+                        data: [
+                            {
+                                segment: 'default',
+                                quantity: 0,
+                                priority: ''
+                            }
+                        ]
+                    }
+                ]
+            })
+        } else {
+            setModalSegment({
+                ...modalSegment,
+                open: true
+            })
+        }
+        setSelectedIdCategoryId(categoryId);
     }
 
+    const handleUpdateSegments = (args:any) => {
+        console.log("handleUpdateSegments", { selectedIdCategoryId, args });
+        const updateData = modalSegment.data.map((categoryInfo:any) => {
+            if (categoryInfo?.categoryId === selectedIdCategoryId) {
+                return {
+                    ...categoryInfo,
+                    data: args.data
+                }
+            } else return categoryInfo
+        })
+        console.log("updateData", updateData)
+        setModalSegment({
+            open: false,
+            data: updateData
+        })
+    }
+    console.log({ modalSegment });
     useEffect( () => {
         const fetchData = async () => {
             const ratesByPlan = await getRatesByPlan(planId);
@@ -404,16 +440,13 @@ export default function EditPlanPage() {
                 )}
 
                 <NewProducts
+                    userType={state?.typeOfUser}
                     planId={planId}
                     key={refresh} 
                     setModalSegment={(args:any) => {
-                        console.log("--- args ---", args);
-                        setModalSegment({
-                            ...modalSegment,
-                            open: true
-                        });
                         handleOpenSegmentModal(args?.category?.idCategory)
                     }}
+                    segments={modalSegment.data}
                 />
                     
             </SectionContainer>
@@ -436,11 +469,18 @@ export default function EditPlanPage() {
             />
             <ModalPlanSegments
                 modal={modalSegment}
-                setModal={setModalSegment}
+                setModal={handleUpdateSegments}
                 editData={editSegment}
                 planId={planId}
                 handleRefresh={handleRefresh} 
                 segments={segments}
+                selectedIdCategoryId={selectedIdCategoryId}
+                onClose={() => {
+                    setModalSegment({
+                        ...modalSegment,
+                        open: false
+                    })
+                }}
             />
         </PlansContainer>
     );

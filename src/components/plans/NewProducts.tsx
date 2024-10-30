@@ -1,7 +1,7 @@
 // NewProducts.tsx
 import { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, TextField } from "@mui/material";
+import { Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, TextField, Grid } from "@mui/material";
 import Swal from "sweetalert2";
 import { DeleteOutlined, EditOutlined, SaveOutlined, LocalOfferOutlined } from "@mui/icons-material";
 import { BodyContainer, HeaderTitle, PlansContainer, SectionContainer } from "./styled";
@@ -12,6 +12,7 @@ interface categoryAccess {
     id: number;
     category: {
         name: string;
+        idCategory: string;
     };
     amount: number;
     duration: number;
@@ -30,13 +31,17 @@ export default function NewProducts(
         // setProducts,
         planId,
         refresh, // Recibe refresh como prop
-        setModalSegment
+        setModalSegment,
+        userType,
+        segments
     }: 
     {
         // setProducts?: any,
         planId?: string,
         refresh?: boolean, // Define el tipo de refresh
         setModalSegment?: (args:any) => void
+        userType?: string
+        segments?: any[]
     }, 
 ) {
     const { t } = useTranslation();
@@ -284,7 +289,9 @@ export default function NewProducts(
                                 </TableHead>
                                 <TableBody>
                                     {product.category_access.map((categoryAccess) => {
-                                        
+                                        // console.log({ categoryAccess });
+                                        // const hasSegments = segments?.find((segment) => categoryAccess.category.idCategory === segment.categoryId)
+                                        // console.log({ hasSegments });
                                         return (
                                             <TableRow key={categoryAccess.id}>
                                                 
@@ -321,7 +328,6 @@ export default function NewProducts(
                                                                 checked={categoryAccess?.unlimited || (editingId === categoryAccess.id && editUnlimited)}
                                                                 defaultChecked={categoryAccess.unlimited}
                                                                 onChange={(event) => {
-                                                                    console.log("onClick");
                                                                     if (editingId === categoryAccess.id) {
                                                                         console.log("::: onChange executed :::")
                                                                         handleLimitedChange(categoryAccess, event)
@@ -333,11 +339,15 @@ export default function NewProducts(
                                                     />
                                                 </TableCell>
                                                 <TableCell align="center">
-                                                    <IconButton onClick={() => setModalSegment && setModalSegment(categoryAccess)}>
-                                                        <Tooltip title={t("Constants.tooltip.addSegment")}>
-                                                            <LocalOfferOutlined sx={{ color: "#4073FF" }} />
-                                                        </Tooltip>
-                                                    </IconButton>
+                                                    {
+                                                        userType && userType !== "Suscrito" && (
+                                                            <IconButton onClick={() => setModalSegment && setModalSegment(categoryAccess)}>
+                                                                <Tooltip title={t("Constants.tooltip.addSegment")}>
+                                                                    <LocalOfferOutlined sx={{ color: "#4073FF" }} />
+                                                                </Tooltip>
+                                                            </IconButton>
+                                                        )
+                                                    }
                                                     {editingId === categoryAccess.id ? (
                                                         <IconButton onClick={() => handleSaveClick(categoryAccess)}>
                                                             <Tooltip title={t("Constants.tooltip.save")}>
@@ -360,6 +370,48 @@ export default function NewProducts(
                                             </TableRow>
                                         )
                                     })}
+                                    {
+                                        product?.category_access?.length > 0 && product?.category_access?.map((categoryAccess) => {
+                                            const hasSegments = segments?.find((segment) => categoryAccess?.category?.idCategory === segment?.categoryId)
+                                            if (hasSegments){
+                                                return (
+                                                    <Grid>
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <TableCell align="center">
+                                                                    {t("Segmento")}
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    {t("Cantidad adicional")}
+                                                                </TableCell>
+                                                                <TableCell align="center">
+                                                                    {t("Prioridad")}
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        {
+                                                                hasSegments?.data?.map((segment: any) => {
+                                                                    return (
+                                                                        <TableRow style={{ paddingLeft: '-100px' }}>
+                                                                            <TableCell align="center">
+                                                                               {t(`Segments.${segment?.segment}`)}
+                                                                            </TableCell>
+                                                                            <TableCell align="center">
+                                                                                {segment?.quantity}
+                                                                            </TableCell>
+                                                                            <TableCell align="center">
+                                                                                {segment?.priority || '-'}
+                                                                            </TableCell>
+                                                                        </TableRow>
+                                                                    )
+                                                                })
+                                                            }
+                                                    </Grid>
+                                                )
+                                            }
+                                            return null;
+                                        })
+                                    }
                                 </TableBody>
                             </Table>
                         </TableContainer>
