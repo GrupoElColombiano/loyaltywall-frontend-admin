@@ -444,6 +444,7 @@ export default function EditPlanPage() {
                     planId={planId}
                     key={refresh} 
                     setModalSegment={(args:any) => {
+                        console.log('args ---', args);
                         handleOpenSegmentModal(args?.category?.idCategory)
                     }}
                     segments={modalSegment.data}

@@ -287,114 +287,107 @@ export default function NewProducts(
                                         <TableCell align="center">Acciones</TableCell>
                                     </TableRow>
                                 </TableHead>
-                                <TableBody>
-                                    {product.category_access.map((categoryAccess) => {
-                                        // console.log({ categoryAccess });
-                                        // const hasSegments = segments?.find((segment) => categoryAccess.category.idCategory === segment.categoryId)
-                                        // console.log({ hasSegments });
+                                {
+                                    product.category_access.map((categoryAccess) => {
+                                        const hasSegments = segments?.find((segment) => categoryAccess?.category?.idCategory === segment?.categoryId)
                                         return (
-                                            <TableRow key={categoryAccess.id}>
-                                                
-                                                <TableCell component="th" scope="row">
-                                                    {categoryAccess.category.name}
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    {editingId === categoryAccess.id ? (
-                                                        <TextField
-                                                            type="number"
-                                                            value={editAmount}
-                                                            onChange={(e) => setEditAmount(parseInt(e.target.value))}
-                                                        />
-                                                    ) : (
-                                                        categoryAccess.amount
-                                                    )}
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    {editingId === categoryAccess.id ? (
-                                                        <TextField
-                                                            type="number"
-                                                            value={editingDuration}
-                                                            onChange={(e) => setEditingDuration(parseInt(e.target.value))}
-                                                        />
-                                                    ) : (
-                                                        categoryAccess.duration
-                                                    )}
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    <FormControlLabel
-                                                        control={
-                                                            <Checkbox
-                                                                color="primary"
-                                                                checked={categoryAccess?.unlimited || (editingId === categoryAccess.id && editUnlimited)}
-                                                                defaultChecked={categoryAccess.unlimited}
-                                                                onChange={(event) => {
-                                                                    if (editingId === categoryAccess.id) {
-                                                                        console.log("::: onChange executed :::")
-                                                                        handleLimitedChange(categoryAccess, event)
-                                                                    }
-                                                                }}
+                                            <TableBody>
+                                                <TableRow key={categoryAccess.id}>
+                                                    <TableCell component="th" scope="row">
+                                                        {categoryAccess.category.name}
+                                                    </TableCell>
+                                                    <TableCell align="center">
+                                                        {editingId === categoryAccess.id ? (
+                                                            <TextField
+                                                                type="number"
+                                                                value={editAmount}
+                                                                onChange={(e) => setEditAmount(parseInt(e.target.value))}
                                                             />
+                                                        ) : (
+                                                            categoryAccess.amount
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell align="center">
+                                                        {editingId === categoryAccess.id ? (
+                                                            <TextField
+                                                                type="number"
+                                                                value={editingDuration}
+                                                                onChange={(e) => setEditingDuration(parseInt(e.target.value))}
+                                                            />
+                                                        ) : (
+                                                            categoryAccess.duration
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell align="center">
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    color="primary"
+                                                                    checked={categoryAccess?.unlimited || (editingId === categoryAccess.id && editUnlimited)}
+                                                                    defaultChecked={categoryAccess.unlimited}
+                                                                    onChange={(event) => {
+                                                                        if (editingId === categoryAccess.id) {
+                                                                            console.log("::: onChange executed :::")
+                                                                            handleLimitedChange(categoryAccess, event)
+                                                                        }
+                                                                    }}
+                                                                />
+                                                            }
+                                                            label=""
+                                                        />
+                                                    </TableCell>
+                                                    <TableCell align="center">
+                                                        {
+                                                            userType && userType !== "Suscrito" && (
+                                                                <IconButton onClick={() => setModalSegment && setModalSegment(categoryAccess)}>
+                                                                    <Tooltip title={t("Constants.tooltip.addSegment")}>
+                                                                        <LocalOfferOutlined sx={{ color: "#4073FF" }} />
+                                                                    </Tooltip>
+                                                                </IconButton>
+                                                            )
                                                         }
-                                                        label=""
-                                                    />
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    {
-                                                        userType && userType !== "Suscrito" && (
-                                                            <IconButton onClick={() => setModalSegment && setModalSegment(categoryAccess)}>
-                                                                <Tooltip title={t("Constants.tooltip.addSegment")}>
-                                                                    <LocalOfferOutlined sx={{ color: "#4073FF" }} />
+                                                        {editingId === categoryAccess.id ? (
+                                                            <IconButton onClick={() => handleSaveClick(categoryAccess)}>
+                                                                <Tooltip title={t("Constants.tooltip.save")}>
+                                                                    <SaveOutlined sx={{ color: "#4073FF" }} />
                                                                 </Tooltip>
                                                             </IconButton>
-                                                        )
-                                                    }
-                                                    {editingId === categoryAccess.id ? (
-                                                        <IconButton onClick={() => handleSaveClick(categoryAccess)}>
-                                                            <Tooltip title={t("Constants.tooltip.save")}>
-                                                                <SaveOutlined sx={{ color: "#4073FF" }} />
+                                                        ) : (
+                                                            <IconButton onClick={() => handleEditClick(categoryAccess)}>
+                                                                <Tooltip title={t("Constants.tooltip.edit")}>
+                                                                    <EditOutlined sx={{ color: "#4073FF" }} />
+                                                                </Tooltip>
+                                                            </IconButton>
+                                                        )}
+                                                        <IconButton onClick={() => handleCategoryDelete(categoryAccess)}>
+                                                            <Tooltip title={t("Constants.tooltip.delete")}>
+                                                                <DeleteOutlined sx={{ color: "#EF5350" }} />
                                                             </Tooltip>
                                                         </IconButton>
-                                                    ) : (
-                                                        <IconButton onClick={() => handleEditClick(categoryAccess)}>
-                                                            <Tooltip title={t("Constants.tooltip.edit")}>
-                                                                <EditOutlined sx={{ color: "#4073FF" }} />
-                                                            </Tooltip>
-                                                        </IconButton>
-                                                    )}
-                                                    <IconButton onClick={() => handleCategoryDelete(categoryAccess)}>
-                                                        <Tooltip title={t("Constants.tooltip.delete")}>
-                                                            <DeleteOutlined sx={{ color: "#EF5350" }} />
-                                                        </Tooltip>
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
-                                    {
-                                        product?.category_access?.length > 0 && product?.category_access?.map((categoryAccess) => {
-                                            const hasSegments = segments?.find((segment) => categoryAccess?.category?.idCategory === segment?.categoryId)
-                                            if (hasSegments){
-                                                return (
-                                                    <Grid>
-                                                        <TableHead>
-                                                            <TableRow>
-                                                                <TableCell align="center">
-                                                                    {t("Segmento")}
-                                                                </TableCell>
-                                                                <TableCell align="center">
-                                                                    {t("Cantidad adicional")}
-                                                                </TableCell>
-                                                                <TableCell align="center">
-                                                                    {t("Prioridad")}
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        </TableHead>
-                                                        {
+                                                    </TableCell>
+                                                </TableRow>
+                                                {
+                                                    (hasSegments) && (
+                                                        <Grid>
+                                                            <TableHead>
+                                                                <TableRow>
+                                                                    <TableCell align="center">
+                                                                        {t("Segmento")}
+                                                                    </TableCell>
+                                                                    <TableCell align="center">
+                                                                        {t("Cantidad adicional")}
+                                                                    </TableCell>
+                                                                    <TableCell align="center">
+                                                                        {t("Prioridad")}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            </TableHead>
+                                                            {
                                                                 hasSegments?.data?.map((segment: any) => {
                                                                     return (
                                                                         <TableRow style={{ paddingLeft: '-100px' }}>
                                                                             <TableCell align="center">
-                                                                               {t(`Segments.${segment?.segment}`)}
+                                                                                {t(`Segments.${segment?.segment}`)}
                                                                             </TableCell>
                                                                             <TableCell align="center">
                                                                                 {segment?.quantity}
@@ -406,13 +399,14 @@ export default function NewProducts(
                                                                     )
                                                                 })
                                                             }
-                                                    </Grid>
-                                                )
-                                            }
-                                            return null;
-                                        })
-                                    }
-                                </TableBody>
+                                                        </Grid>
+                                                    )
+                                                }
+                                                
+
+                                            </TableBody>
+                                        )
+                                    })}
                             </Table>
                         </TableContainer>
                     </BodyContainer>
