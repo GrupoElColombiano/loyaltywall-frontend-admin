@@ -14,6 +14,7 @@ import { Typography, TextField, FormControlLabel, Switch } from "@mui/material";
 // Components
 import ModalPlanProducts from "../../../components/plans/modals/ModalPlanProducts";
 import ModalPlanRates from "../../../components/plans/modals/ModalPlanRates";
+import ModalPlanSegments from "../../../components/plans/modals/ModalPlanSegments";
 import NewProducts from "../../../components/plans/NewProducts";
 import NewRates from "../../../components/plans/NewRates";
 
@@ -64,8 +65,44 @@ export default function EditPlanPage() {
         data: state?.plan?.rates || []
     });
 
+    const [modalSegment, setModalSegment] = useState<any>({
+        open: false,
+        data: [
+            {
+                segment: 'default',
+                quantity: 0,
+                priority: ''
+            }
+        ]
+    });
+
+    console.log("++++", JSON.stringify(modalSegment))
+    const segments = [
+        {
+            value: 'default',
+            label: t('Segments.select.default')
+        },
+        {
+            value: 'man',
+            label: t('Segments.man')
+        },
+        {
+            value: 'woman',
+            label: t('Segments.woman')
+        },
+        {
+            value: 'over25',
+            label: t('Segments.over25')
+        },
+        {
+            value: 'seniorCitizen',
+            label: t('Segments.seniorCitizen')
+        }
+    ]
+
     const [editProduct] = useState<INewPlan>({} as INewPlan);
     const [editRate, setEditRate] = useState<Rate>({} as Rate);
+    const [editSegment] = useState<any>({} as any);
 
     const [isActive, setIsActive] = useState<boolean>(state?.plan?.isActive || false);
     const [btnLoading, setBtnLoading] = useState(false);
@@ -80,6 +117,10 @@ export default function EditPlanPage() {
         name: yup.string().required(t("Constants.form.nameRequired")),
         description: yup.string(),
     });
+
+    const handleOpenSegmentModal = (categoryId: string) => {
+        console.log("handleOpenSegmentModal", categoryId);
+    }
 
     useEffect( () => {
         const fetchData = async () => {
@@ -312,6 +353,7 @@ export default function EditPlanPage() {
                 type="text"
                 variant="outlined"
             />
+            
 
             <SectionContainer>
                 <Typography variant="body1" component="h3" sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -362,10 +404,16 @@ export default function EditPlanPage() {
                 )}
 
                 <NewProducts
-                    // setProducts={setModalProduct}
-                    
                     planId={planId}
-                    key={refresh} // Utiliza el estado refresh como key
+                    key={refresh} 
+                    setModalSegment={(args:any) => {
+                        console.log("--- args ---", args);
+                        setModalSegment({
+                            ...modalSegment,
+                            open: true
+                        });
+                        handleOpenSegmentModal(args?.category?.idCategory)
+                    }}
                 />
                     
             </SectionContainer>
@@ -385,6 +433,14 @@ export default function EditPlanPage() {
                     // })
                     setEditRate
                 }}
+            />
+            <ModalPlanSegments
+                modal={modalSegment}
+                setModal={setModalSegment}
+                editData={editSegment}
+                planId={planId}
+                handleRefresh={handleRefresh} 
+                segments={segments}
             />
         </PlansContainer>
     );

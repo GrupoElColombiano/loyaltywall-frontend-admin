@@ -43,6 +43,7 @@ interface IModalDataProps {
     description?: string;
     setPlanId?: (id: string) => void;
     setEditData?: (args: any) => void;
+    segments?: any[];
 }
 
 interface IModalPayPal {

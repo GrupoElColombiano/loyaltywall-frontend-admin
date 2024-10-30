@@ -187,6 +187,8 @@
   "Constants.tooltip.users": "Usuarios",
   "Constants.tooltip.version": "Versión",
   "Constants.tooltip.view": "Ver",
+  "Constants.tooltip.save": "Guardar",
+  "Constants.tooltip.addSegment": "Agregar segmento",
   "Gamification.clusters.description": "Definición del proceso de configuración de clústeres",
   "Gamification.clusters.empty": "Aún no tienes ninguna configuración en los clusters",
   "Gamification.clusters.penalization.description": "Configure el período máximo de inactividad que se permite a los usuarios dentro del clúster para llevar a cabo un evento, estableciendo un límite en días.",
@@ -283,6 +285,8 @@
   "Plan.new.product.description": " Especifica la categoría de suscripción al contenido, la cantidad de accesos y la duración de visualización deseada.",
   "Plan.new.product.modal.description": "Selecciona un producto para agregar a la configuración del plan. Después, elige una o varias categorías que deseas asociar con este producto. Asegúrate de completar ambos pasos para personalizar adecuadamente tu plan.",
   "Plan.new.products": "Productos",
+  "Plan.new.segments": "Segmentos",
+  "Plan.new.segments.modal.description": "Al activar la opción de segmentación, podrás definir tanto la cantidad de contenido adicional que se incorporará a la configuración de la categoría en el plan com su orden de prioridad",
   "Plan.new.rate.description": "Optimiza tu experiencia en el portal de noticias personalizando la duración de tu plan y eligiendo la tarifa que mejor se adapte a tus necesidades.",
   "Plan.newPlan.alert.accept": "ACEPTAR",
   "Plan.newPlan.alert.cancel": "No",
@@ -309,6 +313,7 @@
   "Plan.newPlan.modal.addRate": "Agregar duración y tarifa",
   "Plan.newPlan.modal.cancel": "CANCELAR",
   "Plan.newPlan.modal.categories.addCategory": "Agregar Categoría",
+  "Plan.newPlan.modal.segments.addSegment": "Agregar Segmento",
   "Plan.newPlan.modal.categories.amount": "Cantidad",
   "Plan.newPlan.modal.categories.category": "Categoría",
   "Plan.newPlan.modal.categories.description": "Lorem ipsum dolor sit amet consectetur. In maecenas scelerisque in facilisi. Condimentum netus eleifend amet vulputate amet auctor ultrices sed. Eu sodales maecenas scelerisque sem bibendum platea tellus aenean ipsum. Elementum sed eu vitae sed urna.",
@@ -595,5 +600,11 @@
   "Users.client.tittle": "Usuarios",
   "Users.client.toltip.action": "Detalles",
   "Users.search.status.label": "Estatus",
-  "Users.title": "Usuarios"
+  "Users.title": "Usuarios",
+  "Segments.man": "Hombre",
+  "Segments.woman": "Mujer",
+  "Segments.over25": "Mayor de 25",
+  "Segments.seniorCitizen": "Adulto mayor",
+  "Segments.priority": "Prioridad",
+  "Segments.select.default": "selecciona una opción"
 }

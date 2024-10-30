@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Checkbox, FormControlLabel, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, TextField } from "@mui/material";
 import Swal from "sweetalert2";
-import { DeleteOutlined, EditOutlined, SaveOutlined } from "@mui/icons-material";
+import { DeleteOutlined, EditOutlined, SaveOutlined, LocalOfferOutlined } from "@mui/icons-material";
 import { BodyContainer, HeaderTitle, PlansContainer, SectionContainer } from "./styled";
 import { getProductsCategoriesPlan, removeCategorie, removeCategorieProduct, updateCategorieProduct } from "../../service/plans";
 
@@ -30,13 +30,13 @@ export default function NewProducts(
         // setProducts,
         planId,
         refresh, // Recibe refresh como prop
-
+        setModalSegment
     }: 
     {
         // setProducts?: any,
         planId?: string,
         refresh?: boolean, // Define el tipo de refresh
-
+        setModalSegment?: (args:any) => void
     }, 
 ) {
     const { t } = useTranslation();
@@ -333,6 +333,11 @@ export default function NewProducts(
                                                     />
                                                 </TableCell>
                                                 <TableCell align="center">
+                                                    <IconButton onClick={() => setModalSegment && setModalSegment(categoryAccess)}>
+                                                        <Tooltip title={t("Constants.tooltip.addSegment")}>
+                                                            <LocalOfferOutlined sx={{ color: "#4073FF" }} />
+                                                        </Tooltip>
+                                                    </IconButton>
                                                     {editingId === categoryAccess.id ? (
                                                         <IconButton onClick={() => handleSaveClick(categoryAccess)}>
                                                             <Tooltip title={t("Constants.tooltip.save")}>

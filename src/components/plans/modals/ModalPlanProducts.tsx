@@ -235,8 +235,8 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
     };
     
     const disabledButton = () => {
-        const disabled = modal.data.some((item: any) => {
-            return item.categories.some((category: any) => {
+        const disabled = modal?.data?.some((item: any) => {
+            return item?.categories?.some((category: any) => {
                 return watch("categories")?.some((watchCategory: any) => {
                     return watchCategory.category === category.idCategory;
                 });
@@ -360,7 +360,7 @@ export default function ModalPlanProducts({ editData, modal, setModal, planId, h
                 <SectionContainer>
                     <Typography variant="body1" component="h3" sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <Inventory2Outlined sx={{ color: "#0045FF", fontSize: 25 }} />
-                        {t("Plan.new.products")}
+                        {t("Plan.new.segments")}
                     </Typography>
 
                     <Typography variant="body1" component="span">

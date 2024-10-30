@@ -187,6 +187,8 @@
   "Constants.tooltip.users": "Users",
   "Constants.tooltip.version": "Version",
   "Constants.tooltip.view": "View",
+  "Constants.tooltip.save": "Save",
+  "Constants.tooltip.addSegment": "Add segment",
   "Gamification.clusters.description": "Definition of the clusters configuration process",
   "Gamification.clusters.empty": "You don't have any configuration in the clusters yet",
   "Gamification.clusters.penalization.description": "Configure the maximum period of inactivity that is allowed to users within the cluster to carry out an event, setting a limit in days.",
@@ -249,6 +251,8 @@
   "Pagintaion.of": "of",
   "PaymentMethods.apiKey": "API Key",
   "Plan.new.products": "Products",
+  "Plan.new.segments": "Segments",
+  "Plan.new.segments.modal.description": "By enabling the segmentation option, you will be able to define both the amount of additional content that will be incorporated into the category configuration in the plan and its order of priority.",
   "Plan.new.product.modal.description": "Select a product to add to the plan configuration. Then, choose one or more categories that you want to associate with this product. Make sure to complete both steps to properly customize your plan.",
   "Plan.new.categories": "Categories",
   "Plan.new.category.modal.description": "The categories you choose have specific settings for accessing content. You can set a limited amount or allow unlimited access. In addition, a duration is determined and the access frequency is daily. Make sure to adjust these options according to your preferences before confirming.",
@@ -309,6 +313,7 @@
   "Plan.newPlan.modal.addRate": "Add Duration and Rate",
   "Plan.newPlan.modal.cancel": "CANCEL",
   "Plan.newPlan.modal.categories.addCategory": "Add Category",
+  "Plan.newPlan.modal.segments.addSegment": "Add Segment",
   "Plan.newPlan.modal.categories.amount": "Amount",
   "Plan.newPlan.modal.categories.category": "Category",
   "Plan.newPlan.modal.categories.description": "Lorem ipsum dolor sit amet consectetur. In maecenas scelerisque in facilisi. Condimentum netus eleifend amet vulputate amet auctor ultrices sed. Eu sodales maecenas scelerisque sem bibendum platea tellus aenean ipsum. Elementum sed eu vitae sed urna.",
@@ -595,5 +600,11 @@
   "Users.client.tittle": "Users",
   "Users.client.toltip.action": "Details",
   "Users.search.status.label": "Status",
-  "Users.title": "User Management"
+  "Users.title": "User Management",
+  "Segments.man": "Man",
+  "Segments.woman": "Woman",
+  "Segments.over25": "Over 25",
+  "Segments.seniorCitizen": "Senior citizen",
+  "Segments.priority": "Priority",
+  "Segments.select.default": "Select an option"
 }
