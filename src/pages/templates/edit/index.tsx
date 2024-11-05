@@ -294,7 +294,7 @@ const EditTemplate: React.FC = () => {
     const navigate = useNavigate();
 
     const location = useLocation();
-    const { data, plans }: { data: any; plans: any[] }  = location.state;
+    const { data, plans }: { data: { name: string, description: string, isActived: boolean , html: string, _id: string }; plans: any[] }  = location.state;
     const id = data?._id;
 
     // Local Storage
@@ -305,7 +305,7 @@ const EditTemplate: React.FC = () => {
 
     // States
     const [editor, setEditor] = useState(data?.html || "");
-
+    
     const [tab, setTab] = useState(0);
 
     const [isPublish, setIsPublish] = useState(false);
@@ -321,17 +321,18 @@ const EditTemplate: React.FC = () => {
     const {
         handleSubmit,
         register,
-        formState: { isDirty }
+        formState: { isDirty },
+        watch,
+        setValue
     } = useForm({
         defaultValues: {
             name: data.name,
             description: data.description,
-            status: data.isActive,
+            status: data.isActived,
         },
         mode: "onChange",
         resolver: yupResolver(validationScheme),
     });
-
   
     const [rows, setRows] = useState<any[]>([]);
 
@@ -380,7 +381,8 @@ const EditTemplate: React.FC = () => {
     const onSubmit = (data: any) => {
         const refactoredData = {
             description: data.description,
-            html: plans.map(plan => plan.idPlan).join(","),
+            // html: plans.map(plan => plan.idPlan).join(","),
+            html: editor,
             idSite: siteStorage.idSite,
             isActive: data.status,
             name: data.name,
@@ -436,6 +438,8 @@ const EditTemplate: React.FC = () => {
 
     const handleSwitchChange = async (event: { target: { checked: any; }; }) => {
         const isActive = event.target.checked;
+
+        setValue("status", isActive);
         const refactoredData = {
             isActive: isActive,
         };
@@ -534,6 +538,7 @@ const EditTemplate: React.FC = () => {
                             defaultChecked
                             name="status"
                             onChange={handleSwitchChange}
+                            checked={watch('status')}
                         />
                     }
                     label={`${t("Templates.form.active")} / ${t("Templates.form.inactive")}`}
