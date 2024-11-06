@@ -32,6 +32,7 @@ import { Add, Inventory2Outlined, PostAddOutlined, SaveOutlined } from "@mui/ico
 
 // Styles
 import { PlansContainer, SectionContainer } from "./styled";
+import ModalPlanSegments from "../../../components/plans/modals/ModalPlanSegments";
 
 
 interface TypeUser {
@@ -91,6 +92,14 @@ export default function NewPlanPage() {
         isActivate,
         btnLoading
     });
+
+    const [modalSegment, setModalSegment] = useState<any>({
+        open: false,
+        data: []
+    });
+    const [selectedIdCategoryId, setSelectedIdCategoryId] = useState<string>('');
+    const [editSegment] = useState<any>({} as any);
+    console.log({ modalSegment })
     // Constants
     const hasAllProduct = modalProduct?.data?.some((product: any) => product?.product?.all_product === true);
     const hasUndefinedRate = modalRate?.data?.some((rate: any) => rate?.time === "Indefinido");
@@ -129,6 +138,7 @@ export default function NewPlanPage() {
             isActive: isActivate,
             idSite: siteStorage.idSite,
             rates: modalRate?.data,
+            segments: modalSegment?.data,
             categories: modalProduct?.data?.map((category: any) => {
                 return category?.categories?.map((subCategory: any) => {
                     return {
@@ -192,6 +202,53 @@ export default function NewPlanPage() {
     };  */
 
     const errorValues = ["", undefined, null];
+
+    const handleUpdateSegments = (args:any) => {
+        console.log("handleUpdateSegments", { selectedIdCategoryId, args });
+        const updateData = modalSegment.data.map((categoryInfo:any) => {
+            if (categoryInfo?.categoryId === selectedIdCategoryId) {
+                return {
+                    ...categoryInfo,
+                    data: args.data
+                }
+            } else return categoryInfo
+        })
+        console.log("updateData", updateData)
+        setModalSegment({
+            open: false,
+            data: updateData
+        })
+    }
+
+    const handleOpenSegmentModal = (categoryId: string) => {
+        const idCategories = modalSegment?.data?.map((segment:any) => segment.categoryId)
+        if (!idCategories.includes(categoryId)) {
+            console.log('modalSegment - existe')
+            setModalSegment({
+                open: true,
+                data: [
+                    ...modalSegment?.data,
+                    {
+                        categoryId,
+                        data: [
+                            {
+                                segment: 'default',
+                                quantity: 0,
+                                priority: '1'
+                            }
+                        ]
+                    }
+                ]
+            })
+        } else {
+            console.log('modalSegment - NO existe')
+            setModalSegment({
+                ...modalSegment,
+                open: true
+            })
+        }
+        setSelectedIdCategoryId(categoryId);
+    }
     
     return (
         <>
@@ -300,6 +357,11 @@ export default function NewPlanPage() {
                         // setProducts={setModalProduct}
                         planId={planId!}
                         key={refresh} // Utiliza el estado refresh como key
+                        userType={listTypeUsers[parseInt(state?.typeOfUser) - 1].label}
+                        setModalSegment={(args:any) => {
+                            console.log('args ---', args);
+                            handleOpenSegmentModal(args?.category?.idCategory)
+                        }}
                     />
 
 
@@ -324,6 +386,21 @@ export default function NewPlanPage() {
                 editData={editRate} 
                 setEditData={setEditRate}
                 setPlanId={setPlanId} 
+            />
+
+            <ModalPlanSegments
+                modal={modalSegment}
+                setModal={handleUpdateSegments}
+                editData={editSegment}
+                planId={planId}
+                handleRefresh={handleRefresh}
+                selectedIdCategoryId={selectedIdCategoryId}
+                onClose={() => {
+                    setModalSegment({
+                        ...modalSegment,
+                        open: false
+                    })
+                }}
             />
         </>
     );

@@ -324,7 +324,7 @@ export default function EditPlanPage() {
                 {t("Plan.view.typeOfUser")}:{" "}
                     
                 <Typography variant="body1" component="span">
-                    {state?.typeOfUser} --
+                    {state?.typeOfUser}
                 </Typography>
             </Typography>
 
