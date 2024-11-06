@@ -70,28 +70,7 @@ export default function EditPlanPage() {
         data: []
     });
 
-    const segments = [
-        {
-            value: 'default',
-            label: t('Segments.select.default')
-        },
-        {
-            value: 'man',
-            label: t('Segments.man')
-        },
-        {
-            value: 'woman',
-            label: t('Segments.woman')
-        },
-        {
-            value: 'over25',
-            label: t('Segments.over25')
-        },
-        {
-            value: 'seniorCitizen',
-            label: t('Segments.seniorCitizen')
-        }
-    ];
+    console.log({ modalSegment });
 
     const [editProduct] = useState<INewPlan>({} as INewPlan);
     const [editRate, setEditRate] = useState<Rate>({} as Rate);
@@ -116,6 +95,7 @@ export default function EditPlanPage() {
     const handleOpenSegmentModal = (categoryId: string) => {
         const idCategories = modalSegment?.data?.map((segment:any) => segment.categoryId)
         if (!idCategories.includes(categoryId)) {
+            console.log('modalSegment - existe')
             setModalSegment({
                 open: true,
                 data: [
@@ -126,13 +106,14 @@ export default function EditPlanPage() {
                             {
                                 segment: 'default',
                                 quantity: 0,
-                                priority: ''
+                                priority: '1'
                             }
                         ]
                     }
                 ]
             })
         } else {
+            console.log('modalSegment - NO existe')
             setModalSegment({
                 ...modalSegment,
                 open: true
@@ -188,7 +169,7 @@ export default function EditPlanPage() {
         },
         resolver: yupResolver(validationScheme),
     });
-
+    console.log("modalSegment", modalSegment);
     // Functions
     const onSubmit = (data: any) => {    
         console.log("executed onSubmit -- edit/index");
@@ -200,7 +181,8 @@ export default function EditPlanPage() {
             isActive: state.plan.isActive,
             site: state.plan.idSite,
             idVersionPlan: state.plan.newVersion,
-            rates: modalRate?.data
+            rates: modalRate?.data,
+            segments: modalSegment.data
         };
         console.log({ editRate });
         console.log("sending" + updatePlan);
@@ -448,6 +430,7 @@ export default function EditPlanPage() {
                         handleOpenSegmentModal(args?.category?.idCategory)
                     }}
                     segments={modalSegment.data}
+                    setSegments={setModalSegment}
                 />
                     
             </SectionContainer>
@@ -473,8 +456,7 @@ export default function EditPlanPage() {
                 setModal={handleUpdateSegments}
                 editData={editSegment}
                 planId={planId}
-                handleRefresh={handleRefresh} 
-                segments={segments}
+                handleRefresh={handleRefresh}
                 selectedIdCategoryId={selectedIdCategoryId}
                 onClose={() => {
                     setModalSegment({
