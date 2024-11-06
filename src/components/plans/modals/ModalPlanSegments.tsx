@@ -17,10 +17,43 @@ import { DeleteOutline, SettingsOutlined } from "@mui/icons-material";
 // Styled
 import { SectionContainer, ModalContainer, BtnContainer, GridContainer, MainTextTitle } from "./styled";
 
-export default function ModalPlanSegments({ modal, setModal, handleRefresh, segments, selectedIdCategoryId, onClose }: any) {
+export default function ModalPlanSegments({ modal, setModal, handleRefresh, selectedIdCategoryId, onClose }: any) {
     const { t } = useTranslation();
  
     const [temporalData, setTemporalData] = useState<any[]>([])
+    const [segments, setSegments] = useState<any[]>([])
+    console.log("🚀 ~ ModalPlanSegments ~ segments:", segments)
+
+    const CDPUrl = import.meta.env.VITE_CDP_URL;
+    const urlToFindSegments = `${CDPUrl}/cxs/segments`
+
+    useEffect(() => {
+        console.log("✅");
+        if (modal.open){
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", "Basic a2FyYWY6a2FyYWY=");
+            myHeaders.append("Cookie", "context-profile-id=51620ed9-f82c-4e73-b2b6-11564866390e");
+
+            // const requestOptions = ;
+
+            fetch(urlToFindSegments, {
+                method: "GET",
+                headers: myHeaders,
+                redirect: "follow"
+            })
+                .then((response) => response.json())
+                .then((result) => {
+                    const mapper = result.map(({ id, name }:any) => {
+                        return {
+                            label: name, value: id
+                        }
+                    })
+                    setSegments(mapper);
+                })
+                .catch((error) => console.error(error));
+        }
+    }, [modal.open])
+    
     
     useEffect(() => {
       const filteredData = modal.data.filter((segment:any) => segment.categoryId === selectedIdCategoryId);
@@ -47,7 +80,7 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, segm
     const configuredSegments: number = temporalData?.length || 0;
     const items: string[] = [t('Segments.select.default')];
     for (let i = 0; i < configuredSegments; i++) {
-        items.push(`${t('Segments.priority')} ${i + 1}`);
+        items.push(`${i + 1}`);
       }
 
     const handleNewRow = () => {
@@ -56,13 +89,13 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, segm
             updatedData = [
                 {
                     segment: temporalData[0]?.segment || 'default',
-                    quantity: 0,
-                    priority: temporalData[0]?.priority || t('Segments.select.default')
+                    quantity: temporalData[0]?.quantity,
+                    priority: 1
                 },
                 {
                     segment: 'default',
                     quantity: 0,
-                    priority: t('Segments.select.default')
+                    priority: 2
                 }
             ]
         } else {
@@ -71,7 +104,7 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, segm
                 {
                     segment: 'default',
                     quantity: 0,
-                    priority: t('Segments.select.default')
+                    priority: items.length + 1
                 }
             ]
         }
@@ -84,6 +117,7 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, segm
     }
 
     const handleUpdate = ({ index, field, value }: any) => {
+        console.log("handleUpdate", { index, field, value });
         const updateData = temporalData?.map((item: any, position: number) => {
             if (position === index) {
                 return {
@@ -189,7 +223,7 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, segm
                                                             >
                                                                 {
                                                                     items?.map((item) => (
-                                                                        <MenuItem disabled={item === t('Segments.select.default')} key={item} value={item}>{item}</MenuItem>
+                                                                        <MenuItem disabled={item === t('Segments.select.default')} key={item} value={item}>{`${t('Segments.priority')} ${item}`}</MenuItem>
                                                                     ))
                                                                 }
                                                             </Select>
