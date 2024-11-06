@@ -33,7 +33,8 @@ export default function NewProducts(
         refresh, // Recibe refresh como prop
         setModalSegment,
         userType,
-        segments
+        segments,
+        setSegments,
     }: 
     {
         // setProducts?: any,
@@ -42,6 +43,7 @@ export default function NewProducts(
         setModalSegment?: (args:any) => void
         userType?: string
         segments?: any[]
+        setSegments?: (args: any) => void
     }, 
 ) {
     const { t } = useTranslation();
@@ -81,15 +83,10 @@ export default function NewProducts(
 
     const handleSaveClick = (categoryAccess: categoryAccess) => {
 
-        // console.log(" HOLA ", categoryAccess.idPlansProductCategory);
-        // console.log(" editingDuration ", editingDuration);
         categoryAccess.amount = editAmount;
         categoryAccess.duration = editingDuration;
         categoryAccess.unlimited = editUnlimited;
 
-        // console.log("categoryAccess::: ", categoryAccess);
-        // Aquí puedes llamar una función para guardar los cambios
-        // Por ejemplo: saveCategoryAccessAmount(categoryAccess.id, editAmount);
         setEditingId(0);
         setEditUnlimited(false);
 
@@ -131,6 +128,48 @@ export default function NewProducts(
         try {
             const response = await getProductsCategoriesPlan(planId);
             setLocalProducts(response.data);
+
+            const fetchSegments = response?.data?.reduce((accTotal:any, product:any) => {
+                const findSegments = product?.category_access.reduce((accSegments:any, catItem:any) => {
+                    console.log({ catItem });
+                    if (catItem?.segments?.length > 0) {
+                        const newSegment = {
+                            categoryId: catItem?.category.idCategory,
+                            data: catItem?.segments.map((segment:any) => {
+                                return {
+                                    segment: segment.value,
+                                    quantity: segment.quantity,
+                                    priority: segment.priority.toString()
+                                }
+                            })
+                        }
+                        console.log({ newSegment });
+                        const updatedSegments = [...accSegments, newSegment];
+                        console.log("🚀 ~ findSegments ~ updatedSegments:", updatedSegments)
+                        return updatedSegments;
+                    }
+                    return accSegments;
+                }, []);
+
+                if (findSegments.length > 0) {
+                    const updateAcc = [...accTotal, ...findSegments] 
+                    console.log({ updateAcc });
+                    return updateAcc
+                } else {
+                    return accTotal;
+                }
+
+            }, [])
+            console.log({ fetchSegments }); 
+            if (fetchSegments?.length > 0) {
+                setSegments && setSegments({
+                    open: false,
+                    data: fetchSegments
+                })
+            }
+            console.log('✅ useEffect ✅');
+            console.log('::: response :::', response.data);
+            console.log('::: segments :::', segments);
         } catch (error) {
             setLocalProducts([]);
             console.error("Error fetching data", error);
@@ -387,13 +426,13 @@ export default function NewProducts(
                                                                     return (
                                                                         <TableRow style={{ paddingLeft: '-100px' }}>
                                                                             <TableCell align="center">
-                                                                                {t(`Segments.${segment?.segment}`)}
+                                                                                {segment?.segment}
                                                                             </TableCell>
                                                                             <TableCell align="center">
                                                                                 {segment?.quantity}
                                                                             </TableCell>
                                                                             <TableCell align="center">
-                                                                                {segment?.priority || '-'}
+                                                                                {`${t('Segments.priority')} ${segment?.priority}` || '-'}
                                                                             </TableCell>
                                                                         </TableRow>
                                                                     )
