@@ -16,39 +16,21 @@ import { DeleteOutline, SettingsOutlined } from "@mui/icons-material";
 
 // Styled
 import { SectionContainer, ModalContainer, BtnContainer, GridContainer, MainTextTitle } from "./styled";
+import { deleteSegments, getSegments } from "../../../service/plans";
 
-export default function ModalPlanSegments({ modal, setModal, handleRefresh, selectedIdCategoryId, onClose }: any) {
+export default function ModalPlanSegments({ modal, setModal, handleRefresh, selectedIdCategoryId, onClose, planId }: any) {
     const { t } = useTranslation();
  
     const [temporalData, setTemporalData] = useState<any[]>([])
     const [segments, setSegments] = useState<any[]>([])
-    console.log("🚀 ~ ModalPlanSegments ~ segments:", segments)
-
-    const CDPUrl = import.meta.env.VITE_CDP_URL;
-    const urlToFindSegments = `${CDPUrl}/cxs/segments`
 
     useEffect(() => {
         console.log("✅");
         if (modal.open){
-            const myHeaders = new Headers();
-            myHeaders.append("Authorization", "Basic a2FyYWY6a2FyYWY=");
-            myHeaders.append("Cookie", "context-profile-id=51620ed9-f82c-4e73-b2b6-11564866390e");
-
-            // const requestOptions = ;
-
-            fetch(urlToFindSegments, {
-                method: "GET",
-                headers: myHeaders,
-                redirect: "follow"
-            })
-                .then((response) => response.json())
-                .then((result) => {
-                    const mapper = result.map(({ id, name }:any) => {
-                        return {
-                            label: name, value: id
-                        }
-                    })
-                    setSegments(mapper);
+            getSegments()
+                .then((segments: any) => {
+                    console.log({ segments });
+                    setSegments(segments.data);
                 })
                 .catch((error) => console.error(error));
         }
@@ -94,7 +76,7 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, sele
                 },
                 {
                     segment: 'default',
-                    quantity: 0,
+                    quantity: 1,
                     priority: 2
                 }
             ]
@@ -103,7 +85,7 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, sele
                 ...temporalData,
                 {
                     segment: 'default',
-                    quantity: 0,
+                    quantity: 1,
                     priority: items.length + 1
                 }
             ]
@@ -111,9 +93,12 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, sele
         setTemporalData(updatedData)
     };
 
-    const handleRemove = (indexToRemove: number) => {
+    const handleRemove = async (indexToRemove: number) => {
         const updateData = temporalData?.filter((_, index) => index !== indexToRemove);
+        const deletedSegment = temporalData?.find((_, index) => index === indexToRemove);
+
         setTemporalData(updateData)
+        await deleteSegments({ planId, categoryId: selectedIdCategoryId, value: deletedSegment.segment })
     }
 
     const handleUpdate = ({ index, field, value }: any) => {
@@ -132,8 +117,10 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, sele
 
     const hasDefault = temporalData.some(obj => Object.values(obj).includes('default'));
     const hasZero = temporalData.some(obj => Object.values(obj).includes(0));
-    console.log({ temporalData });
-    console.log({ hasDefault, hasZero });
+
+    const segmentsSelected = temporalData.map((item) => item.segment);
+    const prioritiesSelected = temporalData.map((item) => item.priority.toString());
+    console.log({ prioritiesSelected });
     return (
         <Modal
             aria-describedby="modal-modal-description"
@@ -183,15 +170,25 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, sele
                                                         placeholder={t("Placeholders.select")}
                                                         variant="outlined"
                                                         onChange={(event: any) => {
-                                                            console.log("Event", event.target.value)
-                                                            handleUpdate({ index, field: "segment", value: event.target.value })
+                                                            handleUpdate({
+                                                                index, field: "segment",
+                                                                value: event.target.value
+                                                            })
                                                         }}
                                                     >
-                                                        {segments?.map((segment: any) => (
-                                                            <MenuItem disabled={segment.value === 'default'} key={segment.value} value={segment.value}>
-                                                                {segment.label}
-                                                            </MenuItem>
-                                                        ))}
+                                                        {
+                                                            segments?.map((segment: any) => {
+                                                                return (
+                                                                    <MenuItem
+                                                                        disabled={segment.value === 'default' || segmentsSelected.includes(segment.value)}
+                                                                        key={segment.value}
+                                                                        value={segment.value}
+                                                                    >
+                                                                        {segment.label}
+                                                                    </MenuItem>
+                                                                )
+                                                            })
+                                                        }
                                                     </Select>
                                                     <TextField
                                                         fullWidth
@@ -223,7 +220,16 @@ export default function ModalPlanSegments({ modal, setModal, handleRefresh, sele
                                                             >
                                                                 {
                                                                     items?.map((item) => (
-                                                                        <MenuItem disabled={item === t('Segments.select.default')} key={item} value={item}>{`${t('Segments.priority')} ${item}`}</MenuItem>
+                                                                        <MenuItem
+                                                                            disabled={
+                                                                                item === t('Segments.select.default')||
+                                                                                prioritiesSelected.includes(item)
+                                                                            }
+                                                                            key={item}
+                                                                            value={item}
+                                                                        >
+                                                                            {`${t('Segments.priority')} ${item}`}
+                                                                        </MenuItem>
                                                                     ))
                                                                 }
                                                             </Select>

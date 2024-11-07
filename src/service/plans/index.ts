@@ -57,3 +57,12 @@ export function updateStatePlan(idPlans: number, params: any) {
     return api.put(`/plans/product/categorie/update-state/${idPlans}`, params);
 }
 
+export function getSegments() {
+    return api.get("/plans/segments");
+}
+
+
+export function deleteSegments(params:any) {
+    console.log("params ", params);
+    return api.delete(`/plans/deleteSegment/${params.planId}/${params.categoryId}/${params.value}`);
+}

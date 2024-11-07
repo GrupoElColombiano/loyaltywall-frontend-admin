@@ -434,22 +434,18 @@ export default function EditPlanPage() {
                 />
                     
             </SectionContainer>
-            <ModalPlanProducts modal={modalProduct} setModal={setModalProduct} editData={editProduct} planId={planId} handleRefresh={handleRefresh} />
+            <ModalPlanProducts
+                modal={modalProduct}
+                setModal={setModalProduct}
+                editData={editProduct}
+                planId={planId}
+                handleRefresh={handleRefresh}
+            />
             <ModalPlanRates
                 modal={modalRate}
                 setModal={setModalRate}
                 editData={editRate}
-                setEditData={(newRate) => {
-                    console.log("new rate: " + newRate);
-                    const updatedDataField = modalRate?.data.concat(newRate)
-                    console.log("🚀 ~ EditPlanPage ~ updatedDataField:", updatedDataField)
-                    console.log("🚀 ~ EditPlanPage ~ modalRate:", modalRate)
-                    // setModalRate({
-                    //     ...modalRate,
-                    //     data: updatedDataField
-                    // })
-                    setEditRate
-                }}
+                setEditData={setEditRate}
             />
             <ModalPlanSegments
                 modal={modalSegment}
